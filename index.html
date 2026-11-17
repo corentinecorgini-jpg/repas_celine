@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Repas de Céline</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#FFF3E6">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Repas Céline">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{--bg:#FFF3E6;--card:#FFFBF6;--ink:#3A2312;--mut:#7B5A42;--deep:#B8520C;--cobalt:#FFB86B;--pink:#FFDDB8;--pink-l:#FFEBD4;--red:#C95410;--red-l:#F9C08F;--lav:#FFCB94;--lav-l:#FFE1BE;--line:rgba(58,35,18,.16);
+ --brand:#B8520C;--warn:#C0391B;--bad:#C0391B;
+ --serif:Calibri,Carlito,"Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 Calibri,Carlito,"Segoe UI",system-ui,-apple-system,Roboto,sans-serif;-webkit-text-size-adjust:100%}
+#app{max-width:920px;margin:0 auto;padding:0 14px calc(104px + env(safe-area-inset-bottom));padding-top:calc(10px + env(safe-area-inset-top))}
+.deco{position:relative;height:62px;margin:0 0 16px;border-radius:26px;background:var(--pink) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='28'%3E%3Cpath d='M0 14 Q14 0 28 14 T56 14' fill='none' stroke='%23F2A65A' stroke-width='7'/%3E%3C/svg%3E") 0 0/56px 28px;overflow:hidden}
+.deco i{position:absolute;border-radius:50%}
+.deco i:nth-child(1){width:86px;height:86px;background:var(--deep);right:70px;top:-14px}
+.deco i:nth-child(2){width:54px;height:54px;background:var(--lav);right:20px;top:22px}
+.deco i:nth-child(3){width:34px;height:34px;background:var(--red);right:128px;top:34px}
+h1{font-family:var(--serif);font-size:2.6rem;font-weight:900;letter-spacing:-.03em;line-height:.95;margin:.2rem 0 1rem;color:var(--deep)}
+h2{font-family:var(--serif);font-size:1.5rem;font-weight:900;letter-spacing:-.02em;margin:1.1rem 0 .5rem;color:var(--deep)}
+h3{font-family:var(--serif);font-size:1.15rem;font-weight:800;margin:.9rem 0 .3rem}
+b{font-weight:800}
+.card{background:var(--card);border:0;border-radius:24px;padding:16px;margin-bottom:12px}
+.card.c0{background:var(--pink)}
+.card.c1{background:var(--cobalt)}
+.card.c2{background:var(--lav)}
+.card.c3{background:var(--red-l)}
+.card[style*="border-color"]{background:var(--deep);color:#fff;border:0!important}
+.card[style*="border-color"] .mut{color:rgba(255,255,255,.75)}
+.card[style*="border-color"] button.lnk{color:#fff;text-decoration-color:var(--pink)}
+.card[style*="border-color"] .meal{border-top-color:rgba(255,255,255,.3)}
+.card[style*="border-color"] button.pri{background:var(--pink);color:var(--ink);border-color:var(--pink)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.sp{justify-content:space-between}
+.mut{color:var(--mut);font-size:.88rem}
+button,select,input,textarea{font:inherit;color:inherit}
+button{border:2px solid var(--ink);background:transparent;border-radius:999px;padding:8px 16px;cursor:pointer;font-weight:700}
+button:active{transform:scale(.96)}
+button.pri{background:var(--deep);color:#fff;border-color:var(--deep)}
+button.lnk{border:0;background:none;color:var(--deep);padding:4px 2px;text-align:left;border-radius:10px;font-family:var(--serif);font-weight:800;font-size:1.08rem;line-height:1.15;text-decoration:none}
+button.del{color:var(--red);border-color:var(--red)}
+button[data-act=eat]{width:46px;height:46px;padding:0;font-size:1.2rem;border-radius:50%;background:transparent}
+button[data-act=eat].pri{background:var(--deep);border-color:var(--deep);color:#fff}
+input,select,textarea{background:#fff;border:2px solid var(--line);border-radius:16px;padding:10px 14px;width:100%}
+input[type=checkbox]{width:22px;height:22px;accent-color:var(--deep)}
+textarea{min-height:110px;resize:vertical}
+label{display:block;font-size:.88rem;color:var(--mut);margin:.6rem 0 .25rem;font-weight:700}
+.grid7{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.dow{text-align:center;font-size:.75rem;color:var(--mut);font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.cell{min-width:0;height:74px;overflow:hidden;padding:5px 4px;text-align:left;display:flex;flex-direction:column;justify-content:space-between;border-radius:18px;border:0;background:var(--card);font-weight:600}
+.cell b{font-family:var(--serif);font-size:1.05rem}
+.cell.out{opacity:.35}.cell.today{box-shadow:inset 0 0 0 3px var(--deep)}
+.cell.ok{background:var(--lav-l)}.cell.low{background:var(--pink-l)}.cell.high{background:var(--red-l)}
+.tabs{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));display:flex;justify-content:center;z-index:5}
+.tabs div{display:flex;max-width:620px;width:100%;background:var(--deep);border-radius:34px;padding:6px;gap:2px;box-shadow:0 10px 30px rgba(58,35,18,.35)}
+.tabs button{flex:1 1 0;min-width:0;border:0;border-radius:26px;background:none;padding:8px 1px;font-size:.68rem;white-space:nowrap;color:rgba(255,255,255,.72);font-weight:800}
+.tabs button.on{color:var(--ink);background:var(--pink)}
+.tabs button span{display:block;font-size:1.35rem}
+.ov{position:fixed;inset:0;background:rgba(58,35,18,.55);display:flex;align-items:flex-end;justify-content:center;z-index:10;overscroll-behavior:contain;touch-action:none}
+.sheet{background:var(--bg);width:100%;max-width:720px;max-height:92vh;max-height:92dvh;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;border-radius:30px 30px 0 0;padding:18px 16px calc(24px + env(safe-area-inset-bottom))}
+@media(min-width:760px){.ov{align-items:center}.sheet{border-radius:30px}}
+.chip{display:inline-block;padding:3px 12px;border-radius:99px;background:var(--pink);color:var(--ink);font-size:.78rem;font-weight:700;margin:0 4px 4px 0}
+.chip.btn{cursor:pointer;border:2px solid var(--ink);background:transparent}.chip.btn.on{background:var(--red);color:#fff;border-color:var(--red)}
+.bar{height:14px;border-radius:99px;background:rgba(58,35,18,.12);overflow:hidden}.bar i{display:block;height:100%;background:var(--red);border-radius:99px}
+.meal{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-top:2px dotted rgba(58,35,18,.22)}
+.meal:first-of-type{border-top:0}
+ol,ul{padding-left:1.2rem;margin:.3rem 0}li{margin:.3rem 0}
+.chk{display:flex;gap:10px;align-items:center;padding:7px 0;border-top:2px dotted rgba(58,35,18,.22)}.chk.done span{text-decoration:line-through;opacity:.5}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ghost{opacity:.6}
+.meal>span:last-child{display:flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0}
+.meal button.pri{white-space:nowrap}
+button[data-act=stockAdj]{width:36px;height:36px;padding:0;font-size:1.1rem}
+.cell .ic{display:block;font-size:.62rem;line-height:1;white-space:nowrap;margin-top:2px;min-height:.7rem}
+.cell .pg{font-size:.68rem;font-weight:800;white-space:nowrap}
+@media(max-width:420px){.cell{border-radius:14px;height:70px}.cell b{font-size:.95rem}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal"></div>
+<script>
+'use strict';
+/* ============ Données ============ */
+const PROFILE_KEY = 'menu-app-celine-profil';
+const PROFILE = (() => { try { return localStorage.getItem(PROFILE_KEY) === 'homme' ? 'homme' : 'femme'; } catch (e) { return 'femme'; } })();
+const LS_KEY = 'menu-app-celine-' + PROFILE + '-v1';
+let _proj = null;
+const DEF_SETTINGS = {
+  name: '',
+  weight: 49, carbsGkg: 0,
+  protMin: 80, protMax: 100, protTol: 10,
+  kcal: 2400, trainBonus: 300,
+  slots: ['Petit-déjeuner', 'Déjeuner', 'Collation', 'Dîner'],
+  equipment: ['Four', 'Airfryer', 'Micro-ondes', 'Plaque de cuisson', 'Mixeur plongeant'],
+  batchPortions: 5, startDate: '2026-11-21',
+  stockTarget: 3, shopCount: 3, maxPrep: 30, store: 'Carrefour',
+  pantry: ['sel', 'poivre', "huile d'olive", 'épices', 'curry', 'cumin'],
+  weekStart: 1, batchDay: 0,
+  levels: {
+    big:   { label: 'Grosse échéance', loadDays: 14, loadKcal: 300, loadCarbs: 6, peakDays: 2, peakCarbs: 9, raceKcal: 500, raceCarbs: 8, recoveryDays: 3, recoveryKcal: 400, recoveryProt: 15 },
+    small: { label: 'Petit trail tranquille', loadDays: 1, loadKcal: 150, loadCarbs: 6, peakDays: 0, peakCarbs: 0, raceKcal: 200, raceCarbs: 6, recoveryDays: 1, recoveryKcal: 150, recoveryProt: 10 }
+  }
+};
+/* Réglages de départ propres à chaque profil (modifiables dans l'onglet Réglages) */
+const PROFILE_SETTINGS = {
+  femme: { name: 'Celine', weight: 63.5, goalMin: 59, goalMax: 60, goalDate: '2027-01-31', protMin: 105, protMax: 135, protTol: 10, kcal: 1425, trainBonus: 0, takeDay: 3, vegDay1: 2, vegDay2: 4, store: 'Supermarché' },
+  homme: { name: 'Manu', weight: 75, protMin: 135, protMax: 195, protTol: 10, kcal: 2550, trainBonus: 250, takeDay: 3, vegDay1: 2, vegDay2: 4, store: 'Supermarché' }
+};
+Object.assign(DEF_SETTINGS, PROFILE_SETTINGS[PROFILE]);
+/* Profil femme : repère les ingrédients à éviter (sans œuf, sans gluten, sans protéines de lait) */
+const DIET_RULES = [
+  ['œuf', /(?:^|[^a-zà-ÿ])(?:œ|oe)ufs?(?![a-zà-ÿ])|mayonnaise/i],
+  ['lait / produit laitier', /\blait\b(?!\s+(de|d')\s*(coco|soja|amande|riz|avoine|noisette))|fromage|gruy|parmesan|mozzarella|emmental|feta|ricotta|mascarpone|cottage|skyr|beurre|cr[èe]me(?!\s+(de|d')\s*(coco|soja|amande|riz|avoine))|yaourt(?!.*(soja|coco|amande))|petit-suisse|k[ée]fir|whey|cas[ée]ine/i],
+  ['poivron / paprika', /poivron|paprika|piment doux/i],
+  ['gluten', /(?:^|[^a-zà-ÿ])bl[ée](?![a-zà-ÿ])|farine(?!\s+(de|d')\s*(riz|ma[iï]s|sarrasin|pois|ch[âa]taigne|coco|amande|quinoa))|\bpain\b|\bp[âa]tes\b|(?<!courge )spaghetti|semoule|boulgour|couscous|chapelure|panure|seigle|\borge\b|[ée]peautre|biscuit|sauce soja|avoine(?!.*sans gluten)/i]
+];
+const dietFlags = r => PROFILE !== 'femme' ? [] : DIET_RULES.filter(([, re]) => re.test(r.ings.map(i => i.n).join(' ; '))).map(x => x[0]);
+const LEVEL_FIELDS = [
+  ['loadDays', 'Début de la charge (jours avant)', 1], ['loadKcal', 'Bonus kcal pendant la charge', 50],
+  ['loadCarbs', 'Glucides pendant la charge (g/kg/jour)', 0.5], ['peakDays', 'Charge finale : nb de jours avant', 1],
+  ['peakCarbs', 'Glucides charge finale (g/kg/jour)', 0.5], ['raceKcal', 'Bonus kcal le jour J', 50],
+  ['raceCarbs', 'Glucides le jour J (g/kg)', 0.5], ['recoveryDays', 'Jours de récupération après', 1],
+  ['recoveryKcal', 'Bonus kcal en récupération', 50], ['recoveryProt', 'Bonus protéines en récupération (g)', 5]
+];
+const UNITS = ['g','kg','ml','cl','l','càs','càc','boîte','boîtes','sachet','sachets','pot','pots','gousse','gousses','tranche','tranches','pincée','pincées'];
+const UNIT_NORM = {boîtes:'boîte',sachets:'sachet',pots:'pot',gousses:'gousse',tranches:'tranche',pincées:'pincée'};
+
+const RECIPE_DATA = {
+  femme: [
+    ["p1", "Poulet au curry coco, lentilles corail et chou-fleur", "plat", 5, 30, ["Plaque de cuisson"], 407, 40.8, 16, ["750 g blanc de poulet | Viande & poisson", "60 g lentilles corail | Épicerie", "750 g chou-fleur | Fruits & légumes", "300 ml lait de coco allégé | Épicerie", "2,5 oignons | Fruits & légumes", "5 gousses ail | Fruits & légumes", "48 g huile d'olive | Épicerie", "1 curry (poudre sans additif) | Épicerie"], ["Couper le poulet en dés, émincer oignons et ail, détailler le chou-fleur en petits bouquets.", "Dorer poulet et oignons 5 min dans l'huile.", "Ajouter le curry, les lentilles, le chou-fleur, le lait de coco et un peu d'eau, saler, mijoter 18 min.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 4, null, null],
+    ["p2", "Chili de dinde aux légumes, peu de haricots, sans gluten", "plat", 5, 30, ["Plaque de cuisson"], 397, 38.3, 14, ["750 g dinde hachée | Viande & poisson", "125 g haricots rouges cuits (boîte, égouttés) | Épicerie", "600 g tomates concassées | Épicerie", "300 g champignons de Paris | Fruits & légumes", "2,5 oignons | Fruits & légumes", "500 g courgettes | Fruits & légumes", "60 g huile d'olive | Épicerie"], ["Faire revenir oignons, courgettes en dés, champignons émincés et dinde hachée 6 min dans l'huile.", "Ajouter cumin, coriandre moulue, tomates et haricots, mijoter 15 min.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 4, null, null],
+    ["p3", "Cabillaud, brocoli et purée de chou-fleur à l'huile d'olive (four)", "plat", 5, 25, ["Four", "Mixeur plongeant"], 401, 43.5, 12, ["950 g filet de cabillaud | Viande & poisson", "750 g brocoli | Fruits & légumes", "750 g chou-fleur | Fruits & légumes", "60 g huile d'olive | Épicerie", "60 g jus de citron | Fruits & légumes", "40 g amandes effilées | Épicerie"], ["Cuire le chou-fleur 15 min à l'eau salée, l'égoutter et le mixer avec la moitié de l'huile pour une purée.", "Four à 200 °C : brocoli huilé et cabillaud citronné, 15 min.", "Répartir purée, brocoli et cabillaud en 5 boîtes, amandes effilées au moment de manger."], 3, null, null],
+    ["p4", "Boulettes de dinde sans œuf, sauce tomate-courgette", "plat", 5, 30, ["Airfryer", "Plaque de cuisson"], 406, 40.6, 12, ["850 g dinde hachée | Viande & poisson", "30 g graines de lin moulues | Épicerie", "2,5 oignons | Fruits & légumes", "600 g tomates concassées | Épicerie", "750 g courgettes | Fruits & légumes", "50 g huile d'olive | Épicerie"], ["Mélanger dinde, graines de lin moulues, un oignon haché, sel et herbes de Provence ; former environ 25 boulettes.", "Airfryer 190 °C, 12 min, en retournant à mi-cuisson.", "Faire revenir courgettes en dés et l'oignon restant dans l'huile, ajouter les tomates, 10 min.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 4, null, null],
+    ["p5", "Velouté de courgette et chou-fleur au coco, dés de dinde rôtie", "plat", 5, 30, ["Plaque de cuisson", "Mixeur plongeant"], 401, 41.7, 13, ["750 g courgettes | Fruits & légumes", "750 g chou-fleur | Fruits & légumes", "2,5 oignons | Fruits & légumes", "250 ml lait de coco allégé | Épicerie", "20 g huile d'olive | Épicerie", "800 g escalope de dinde | Viande & poisson", "40 g graines de courge | Épicerie"], ["Cuire courgettes en cubes, chou-fleur en bouquets et oignon dans de l'eau salée à hauteur 20 min.", "Ajouter le lait de coco et mixer au mixeur plongeant.", "Dorer la dinde en dés dans l'huile, 6 min, et la répartir sur les veloutés avec les graines de courge.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 4, null, null],
+    ["p6", "Curry de crevettes, courgette et haricots verts", "plat", 5, 25, ["Plaque de cuisson"], 401, 40.1, 14, ["950 g crevettes cuites décortiquées | Viande & poisson", "400 ml lait de coco allégé | Épicerie", "200 g carottes | Fruits & légumes", "500 g courgettes | Fruits & légumes", "300 g haricots verts | Fruits & légumes", "2 oignons | Fruits & légumes", "55 g huile d'olive | Épicerie", "5 gousses ail | Fruits & légumes"], ["Faire revenir oignons, ail, carottes en fines rondelles, courgettes en dés et haricots verts coupés dans l'huile 8 min.", "Ajouter curry, gingembre et lait de coco, mijoter 5 min, puis les crevettes 2 min.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 3, null, null],
+    ["p7", "Saumon, haricots verts au citron et sauce yaourt-aneth (four)", "plat", 5, 20, ["Four"], 396, 32.3, 10, ["620 g pavés de saumon | Viande & poisson", "1 kg haricots verts | Fruits & légumes", "300 g yaourt au soja nature sans sucres | Rayon frais", "25 g amandes effilées | Épicerie", "15 g huile d'olive | Épicerie", "60 g jus de citron | Fruits & légumes"], ["Four à 200 °C : saumon et haricots verts huilés, citron, 15 min.", "Mélanger le yaourt au soja avec aneth, sel, poivre et un peu de jus de citron.", "Répartir en 5 boîtes, sauce et amandes effilées au moment de manger."], 3, null, null],
+    ["p9", "Velouté de butternut au coco, dés de poulet rôti", "plat", 5, 30, ["Plaque de cuisson", "Mixeur plongeant"], 405, 42.5, 17, ["450 g butternut | Fruits & légumes", "300 g chou-fleur | Fruits & légumes", "2,5 oignons | Fruits & légumes", "5 gousses ail | Fruits & légumes", "250 ml lait de coco allégé | Épicerie", "30 g huile d'olive | Épicerie", "820 g blanc de poulet | Viande & poisson", "40 g graines de courge | Épicerie"], ["Cuire butternut en cubes, chou-fleur en bouquets, oignon et ail dans de l'eau salée à hauteur 20 min.", "Ajouter le lait de coco et mixer au mixeur plongeant.", "Dorer le poulet en dés dans l'huile, 7 min, avec sel, poivre et un peu de noix de muscade, et le répartir sur les veloutés avec les graines de courge.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 4, null, null],
+    ["p10", "Courge spaghetti, sauce tomate et boulettes de poulet sans œuf", "plat", 5, 40, ["Four", "Plaque de cuisson"], 406, 42.0, 16, ["600 g courge spaghetti | Fruits & légumes", "850 g poulet haché | Viande & poisson", "30 g graines de lin moulues | Épicerie", "500 g tomates concassées | Épicerie", "2 oignons | Fruits & légumes", "5 gousses ail | Fruits & légumes", "55 g huile d'olive | Épicerie"], ["Four à 200 °C : couper la courge spaghetti en deux dans la longueur, la cuire 35 min face coupée vers le bas, puis égrener la chair à la fourchette.", "Mélanger le poulet haché, les graines de lin, un oignon haché, sel et herbes de Provence ; former environ 25 boulettes, les dorer 8 min à la poêle dans la moitié de l'huile.", "Faire revenir l'oignon restant et l'ail dans le reste d'huile, ajouter les tomates, 10 min, puis les boulettes.", "Répartir courge et boulettes en 5 boîtes (1 boîte = 1 portion)."], 4, null, null],
+    ["p11", "Poulet tikka masala tomate-coco et chou-fleur", "plat", 5, 30, ["Plaque de cuisson"], 404, 42.8, 13, ["850 g blanc de poulet | Viande & poisson", "500 g tomates concassées | Épicerie", "350 ml lait de coco allégé | Épicerie", "500 g chou-fleur | Fruits & légumes", "2,5 oignons | Fruits & légumes", "5 gousses ail | Fruits & légumes", "45 g huile d'olive | Épicerie", "1,5 càc garam masala | Épicerie", "1,5 càc curcuma et cumin (mélange) | Épicerie"], ["Couper le poulet en dés et le faire dorer 5 min dans l'huile, réserver.", "Faire revenir oignon et ail, ajouter les épices 1 min, puis tomates et lait de coco, mijoter 10 min.", "Ajouter le chou-fleur en petits bouquets 8 min, puis le poulet 5 min.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 4, null, null],
+    ["p12", "Saumon en croûte de noisettes-herbes et brocoli rôti (four)", "plat", 5, 25, ["Four"], 399, 32.1, 9, ["620 g pavés de saumon | Viande & poisson", "40 g noisettes concassées | Épicerie", "1 kg brocoli | Fruits & légumes", "15 g huile d'olive | Épicerie", "60 g jus de citron | Fruits & légumes"], ["Four à 200 °C : brocoli en bouquets huilé, 10 min.", "Poser les pavés de saumon sur une plaque, arroser de citron, couvrir de noisettes concassées, herbes de Provence, sel et poivre.", "Enfourner le saumon avec le brocoli 12 min de plus.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 3, null, null],
+    ["p13", "Poulet, champignons et épinards à la crème de coco", "plat", 5, 25, ["Plaque de cuisson"], 401, 45.8, 7, ["850 g blanc de poulet | Viande & poisson", "600 g champignons de Paris | Fruits & légumes", "500 g jeunes pousses d'épinards | Fruits & légumes", "400 ml lait de coco allégé | Épicerie", "2 oignons | Fruits & légumes", "5 gousses ail | Fruits & légumes", "40 g huile d'olive | Épicerie"], ["Dorer le poulet en dés 6 min dans l'huile avec l'oignon et l'ail, réserver.", "Faire revenir les champignons émincés 5 min, ajouter le lait de coco, sel, poivre et muscade, mijoter 5 min.", "Ajouter les épinards 2 min puis le poulet.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 3, null, null],
+    ["p8", "Poulet rôti aux herbes, brocoli et haricots verts (four)", "plat", 5, 15, ["Four"], 407, 44.8, 11, ["850 g blanc de poulet | Viande & poisson", "650 g brocoli | Fruits & légumes", "600 g haricots verts | Fruits & légumes", "70 g huile d'olive | Épicerie", "5 gousses ail | Fruits & légumes"], ["Four à 200 °C : brocoli et haricots verts huilés avec l'ail, herbes de Provence, 15 min.", "Ajouter le poulet en morceaux, 20 min de plus.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 3, null, null],
+    ["t1", "Salade de thon, maïs, carotte et concombre (à emporter, sans réchauffer)", "emporter", 1, 15, [], 406, 41.5, 14, ["150 g thon au naturel égoutté | Épicerie", "25 g maïs (boîte, égoutté) | Épicerie", "60 g carotte râpée | Fruits & légumes", "100 g concombre | Fruits & légumes", "80 g tomates cerises | Fruits & légumes", "12 g huile d'olive | Épicerie", "15 g jus de citron | Fruits & légumes", "8 g noix | Épicerie"], ["La veille : râper la carotte, couper concombre et tomates en dés.", "Mélanger avec le thon émietté et le maïs, assaisonner d'huile d'olive, de jus de citron, de sel et de poivre, noix concassées au dernier moment.", "Boîte hermétique au frais (glacière avec pain de glace si besoin) : se mange froide, sans réchauffage."], 1, null, null],
+    ["t2", "Salade de poulet, pois chiches et légumes croquants (à emporter, sans réchauffer)", "emporter", 1, 20, ["Plaque de cuisson"], 399, 38.2, 14, ["150 g blanc de poulet | Viande & poisson", "40 g pois chiches cuits (boîte, égouttés) | Épicerie", "80 g concombre | Fruits & légumes", "40 g carotte râpée | Fruits & légumes", "60 g tomates cerises | Fruits & légumes", "15 g huile d'olive | Épicerie", "15 g jus de citron | Fruits & légumes"], ["La veille : cuire le poulet en dés 8 min à la poêle avec un peu de cumin, laisser refroidir.", "Mélanger poulet, pois chiches, légumes en dés, huile, citron, sel et poivre.", "Boîte hermétique au frais (glacière avec pain de glace si besoin) : se mange froide, sans réchauffage."], 1, null, null],
+    ["t4", "Salade de courge spaghetti, poulet rôti et noix (à emporter, sans réchauffer)", "emporter", 1, 40, ["Four", "Plaque de cuisson"], 407, 37.1, 12, ["100 g courge spaghetti | Fruits & légumes", "150 g blanc de poulet | Viande & poisson", "60 g concombre | Fruits & légumes", "60 g tomates cerises | Fruits & légumes", "10 g noix | Épicerie", "12 g huile d'olive | Épicerie", "15 g jus de citron | Fruits & légumes"], ["La veille : cuire la courge spaghetti au four 35 min (moitiés face coupée vers le bas), égrener la chair et la laisser refroidir.", "Cuire le poulet en dés 8 min à la poêle avec un peu de cumin, laisser refroidir.", "Mélanger courge, poulet, concombre et tomates en dés, huile, citron, sel et poivre, noix au dernier moment.", "Boîte hermétique au frais (glacière avec pain de glace si besoin) : se mange froide, sans réchauffage."], 1, null, null],
+    ["t5", "Salade de brocoli, saumon et noisettes (à emporter, sans réchauffer)", "emporter", 1, 25, ["Plaque de cuisson"], 403, 33.0, 9, ["150 g brocoli | Fruits & légumes", "130 g pavé de saumon | Viande & poisson", "4 g noisettes concassées | Épicerie", "20 g oignon rouge | Fruits & légumes", "40 g yaourt au soja nature sans sucres | Rayon frais", "4 g huile d'olive | Épicerie", "12 g jus de citron | Fruits & légumes"], ["La veille : cuire le brocoli en petits bouquets 5 min à l'eau, le refroidir sous l'eau froide et l'égoutter.", "Cuire le saumon 10 min à la poêle ou au four, l'émietter une fois froid.", "Mélanger avec l'oignon émincé, l'huile, le citron, le yaourt au soja, sel et poivre, noisettes au dernier moment.", "Boîte hermétique au frais (glacière avec pain de glace si besoin) : se mange froide, sans réchauffage."], 1, null, null],
+    ["t3", "Salade de haricots verts, saumon et pommes de terre (à emporter, sans réchauffer)", "emporter", 1, 25, ["Plaque de cuisson"], 402, 30.1, 15, ["40 g pommes de terre | Fruits & légumes", "150 g haricots verts | Fruits & légumes", "130 g pavé de saumon | Viande & poisson", "20 g oignon rouge | Fruits & légumes", "6 g huile d'olive | Épicerie", "15 g jus de citron | Fruits & légumes"], ["La veille : cuire les pommes de terre en cubes 15 min à l'eau, les haricots verts 8 min, puis les refroidir.", "Cuire le saumon 10 min à la poêle ou au four, l'émietter une fois froid.", "Mélanger avec l'oignon émincé, l'huile, le citron, sel, poivre et ciboulette.", "Boîte hermétique au frais (glacière avec pain de glace si besoin) : se mange froide, sans réchauffage."], 1, null, null],
+    ["v1", "Dahl de lentilles corail, tofu et épinards au lait de coco", "vegetal", 5, 35, ["Plaque de cuisson"], 393, 35.7, 18, ["60 g lentilles corail | Épicerie", "75 g patate douce | Fruits & légumes", "220 ml lait de coco allégé | Épicerie", "800 g tofu ferme nature | Rayon frais", "500 g jeunes pousses d'épinards | Fruits & légumes", "2,5 oignons | Fruits & légumes", "5 gousses ail | Fruits & légumes", "15 g huile d'olive | Épicerie", "50 g protéines de pois nature | Épicerie", "1,5 càc curcuma, cumin et garam masala (mélange) | Épicerie", "1 càc gingembre en poudre | Épicerie"], ["Faire revenir oignon et ail hachés dans l'huile 4 min, ajouter curcuma, cumin, garam masala et gingembre 1 min.", "Ajouter lentilles corail rincées, patate douce en petits dés, lait de coco et de l'eau à hauteur, mijoter 20 min.", "Ajouter le tofu en dés et les épinards 3 min, puis les protéines de pois délayées dans un peu d'eau, saler, coriandre fraîche si possible.", "Répartir en 5 boîtes : 2 au frais (jeudi compris), 3 au congélateur à sortir la veille au frigo."], 3, null, null],
+    ["v2", "Curry de pois chiches, tofu et épinards au garam masala", "vegetal", 5, 30, ["Plaque de cuisson"], 409, 37.5, 18, ["200 g pois chiches cuits (boîte, égouttés) | Épicerie", "850 g tofu ferme nature | Rayon frais", "500 g jeunes pousses d'épinards | Fruits & légumes", "250 ml lait de coco allégé | Épicerie", "400 g tomates concassées | Épicerie", "2,5 oignons | Fruits & légumes", "10 g huile d'olive | Épicerie", "50 g protéines de pois nature | Épicerie", "1,5 càc garam masala | Épicerie", "1 càc coriandre moulue | Épicerie", "1 càc gingembre en poudre | Épicerie"], ["Faire revenir l'oignon dans l'huile 4 min, ajouter garam masala, coriandre et gingembre 1 min.", "Ajouter tomates, lait de coco, pois chiches égouttés et tofu en dés, mijoter 15 min, puis les épinards 3 min.", "Hors du feu, ajouter les protéines de pois délayées dans un peu d'eau.", "Répartir en 5 boîtes : 2 au frais (jeudi compris), 3 au congélateur à sortir la veille au frigo."], 3, null, null],
+    ["v3", "Tofu masala tomate-coco et courgette", "vegetal", 5, 30, ["Plaque de cuisson"], 406, 31.9, 18, ["1,1 kg tofu ferme nature | Rayon frais", "750 g tomates concassées | Épicerie", "300 ml lait de coco allégé | Épicerie", "600 g courgettes | Fruits & légumes", "2,5 oignons | Fruits & légumes", "15 g huile d'olive | Épicerie", "5 gousses ail | Fruits & légumes", "1,5 càc garam masala | Épicerie", "1,5 càc curcuma et cumin (mélange) | Épicerie"], ["Faire dorer le tofu en dés 6 min dans la moitié de l'huile, réserver.", "Faire revenir oignon, ail et courgette en dés, ajouter les épices 1 min, puis tomates et lait de coco, mijoter 12 min.", "Remettre le tofu 3 min.", "Répartir en 5 boîtes : 2 au frais (jeudi compris), 3 au congélateur à sortir la veille au frigo."], 3, null, null],
+    ["v5", "Courge spaghetti, tofu et sauce tomate-coco épicée", "vegetal", 5, 40, ["Four", "Plaque de cuisson"], 405, 35.5, 19, ["500 g courge spaghetti | Fruits & légumes", "950 g tofu ferme nature | Rayon frais", "500 g tomates concassées | Épicerie", "250 ml lait de coco allégé | Épicerie", "2,5 oignons | Fruits & légumes", "15 g huile d'olive | Épicerie", "50 g protéines de pois nature | Épicerie", "1,5 càc garam masala | Épicerie", "1,5 càc curcuma et cumin (mélange) | Épicerie"], ["Four à 200 °C : cuire la courge spaghetti 35 min (moitiés face coupée vers le bas), égrener la chair.", "Faire dorer le tofu en dés 6 min, réserver. Faire revenir l'oignon, ajouter les épices 1 min, puis tomates et lait de coco, mijoter 10 min.", "Ajouter le tofu et les protéines de pois délayées, servir sur la courge.", "Répartir en 5 boîtes : 2 au frais (jeudi compris), 3 au congélateur à sortir la veille au frigo."], 3, null, null],
+    ["v6", "Velouté de butternut au curry, tofu grillé et graines de courge", "vegetal", 5, 35, ["Plaque de cuisson", "Mixeur plongeant"], 408, 35.7, 15, ["350 g butternut | Fruits & légumes", "850 g tofu ferme nature | Rayon frais", "250 ml lait de coco allégé | Épicerie", "2,5 oignons | Fruits & légumes", "300 g jeunes pousses d'épinards | Fruits & légumes", "10 g huile d'olive | Épicerie", "50 g protéines de pois nature | Épicerie", "40 g graines de courge | Épicerie", "1,5 càc curry (poudre sans additif) | Épicerie", "1 càc gingembre en poudre | Épicerie"], ["Cuire butternut en cubes, oignon et épinards dans de l'eau salée à hauteur 20 min, avec curry et gingembre.", "Ajouter le lait de coco et les protéines de pois, mixer au mixeur plongeant.", "Dorer le tofu en dés 6 min dans l'huile et le répartir sur les veloutés avec les graines de courge.", "Répartir en 5 boîtes : 2 au frais (jeudi compris), 3 au congélateur à sortir la veille au frigo."], 3, null, null],
+    ["v4", "Curry épicé de chou-fleur, lentilles corail et tofu (curcuma, cumin)", "vegetal", 5, 35, ["Plaque de cuisson"], 402, 36.7, 21, ["60 g lentilles corail | Épicerie", "200 g carottes | Fruits & légumes", "1 kg chou-fleur | Fruits & légumes", "200 ml lait de coco allégé | Épicerie", "800 g tofu ferme nature | Rayon frais", "2 oignons | Fruits & légumes", "12 g huile d'olive | Épicerie", "50 g protéines de pois nature | Épicerie", "1,5 càc curcuma, cumin et coriandre (mélange) | Épicerie", "1 càc gingembre en poudre | Épicerie"], ["Faire revenir l'oignon dans l'huile 3 min, ajouter les épices 1 min.", "Ajouter lentilles rincées, carottes en rondelles, chou-fleur en petits bouquets, lait de coco et de l'eau à hauteur, mijoter 25 min.", "Ajouter le tofu en dés 3 min, puis les protéines de pois délayées, saler.", "Répartir en 5 boîtes : 2 au frais (jeudi compris), 3 au congélateur à sortir la veille au frigo."], 3, null, null],
+    ["cb1", "Bol de yaourt soja, myrtilles, protéines de pois, amandes et chia", "petit-dej", 4, 5, [], 326, 31.1, 11, ["600 g yaourt au soja nature sans sucres | Rayon frais", "100 g protéines de pois nature | Épicerie", "200 g myrtilles (fraîches ou surgelées) | Fruits & légumes", "65 g amandes | Épicerie", "32 g graines de chia | Épicerie"], ["Répartir le yaourt au soja en 4 bocaux, ajouter les protéines de pois et bien mélanger.", "Myrtilles, amandes concassées et chia au moment de manger.", "4 portions = 4 jours de conservation : à refaire tous les 4 jours."], 4, null, null],
+    ["cb2", "Tofu brouillé épinards-champignons, clémentine et graines de courge", "petit-dej", 3, 15, ["Plaque de cuisson"], 325, 26.5, 11, ["450 g tofu ferme nature | Rayon frais", "180 g champignons de Paris | Fruits & légumes", "180 g jeunes pousses d'épinards | Fruits & légumes", "2 càc huile d'olive | Épicerie", "3 clémentines | Fruits & légumes", "30 g graines de courge | Épicerie"], ["Émietter le tofu, le faire dorer 5 min dans l'huile avec les champignons émincés, curcuma, sel et poivre.", "Ajouter les épinards 2 min. Répartir en 3 boîtes.", "Réchauffer 1 min au micro-ondes, graines de courge par-dessus, 1 clémentine à côté. 3 portions = 3 jours."], 3, null, null],
+    ["cb3", "Chia pudding protéiné au kiwi", "petit-dej", 4, 10, [], 336, 30.8, 13, ["90 g graines de chia | Épicerie", "480 g yaourt au soja nature sans sucres | Rayon frais", "400 ml lait de soja nature | Épicerie", "90 g protéines de pois nature | Épicerie", "3 kiwis | Fruits & légumes", "8 g noix | Épicerie"], ["Dans 4 bocaux : chia, yaourt au soja, lait de soja et protéines de pois, bien mélanger.", "Garder au frais une nuit (30 min minimum).", "Kiwi en dés et noix concassées au moment de manger. 4 portions = 4 jours de conservation."], 4, null, null],
+    ["cb4", "Bol de yaourt soja, clémentine, protéines de pois et noisettes", "petit-dej", 4, 5, [], 324, 31.0, 13, ["800 g yaourt au soja nature sans sucres | Rayon frais", "100 g protéines de pois nature | Épicerie", "4 clémentines | Fruits & légumes", "65 g noisettes | Épicerie"], ["Répartir le yaourt au soja en 4 bocaux, ajouter les protéines de pois et bien mélanger.", "Clémentine en quartiers et noisettes concassées au moment de manger.", "4 portions = 4 jours de conservation : à refaire tous les 4 jours."], 4, null, null],
+    ["cb5", "Pancakes protéinés sans œuf ni gluten, myrtilles (week-end)", "petit-dej", 4, 30, ["Plaque de cuisson", "Mixeur plongeant"], 329, 20.8, 26, ["80 g flocons d'avoine certifiés sans gluten | Épicerie", "1,5 bananes | Fruits & légumes", "60 g protéines de pois nature | Épicerie", "240 g yaourt au soja nature sans sucres | Rayon frais", "32 g graines de lin moulues | Épicerie", "2,5 càc huile d'olive | Épicerie", "32 g purée d'amande | Épicerie", "160 g myrtilles (fraîches ou surgelées) | Fruits & légumes"], ["Mixer flocons, banane, protéines de pois, yaourt au soja, graines de lin et 1 càc de levure sans gluten avec un peu d'eau.", "Cuire de petits pancakes à la poêle antiadhésive huilée, 2 min par face (environ 12 par lot).", "Congélation : séparer par du papier cuisson. Réchauffer 40 s au micro-ondes, purée d'amande et myrtilles par-dessus. Portion = 3 pancakes. Week-end : un peu plus de glucides, c'est voulu."], 60, null, true],
+    ["fs1", "Yaourt au soja, protéines de pois, fruits rouges et amandes", "collation", 4, 5, [], 287, 24.5, 11, ["800 g yaourt au soja nature sans sucres | Rayon frais", "60 g protéines de pois nature | Épicerie", "240 g fruits rouges surgelés | Fruits & légumes", "55 g amandes | Épicerie", "24 g graines de chia | Épicerie"], ["Répartir le yaourt en 4 pots, ajouter les protéines de pois et mélanger.", "Fruits rouges décongelés, amandes et chia au moment de manger.", "4 portions = 4 jours de conservation."], 4, null, null],
+    ["fs2", "Dés de tofu mariné soja-sésame, concombre et noix", "collation", 4, 10, [], 293, 21.9, 5, ["600 g tofu ferme nature | Rayon frais", "400 g concombre | Fruits & légumes", "8 g huile d'olive | Épicerie", "48 g noix | Épicerie"], ["Couper le tofu en dés, le faire dorer 5 min à la poêle avec un peu d'huile, sel, poivre et un filet de sauce soja sans gluten (tamari).", "Répartir en 4 boîtes avec le concombre en bâtonnets, noix au moment de manger.", "4 portions = 3 jours de conservation."], 3, null, null],
+    ["fs3", "Boules protéinées cacao-amande (sans sucre)", "collation", 6, 15, ["Mixeur plongeant"], 290, 24.9, 4, ["130 g protéines de pois nature | Épicerie", "150 g purée d'amande | Épicerie", "36 g cacao non sucré | Épicerie", "36 g graines de lin moulues | Épicerie"], ["Mélanger tous les ingrédients avec 2 à 3 càs d'eau jusqu'à obtenir une pâte souple.", "Former environ 18 boules, garder au frais ou au congélateur. Portion = 3 boules."], 14, null, null],
+    ["fs4", "Edamame et amandes", "collation", 4, 5, [], 290, 19.4, 12, ["480 g edamame surgelés, écossés | Surgelés", "95 g amandes | Épicerie"], ["Décongeler les edamame (ou les passer 3 min à l'eau bouillante salée), répartir en 4 boîtes.", "Amandes au moment de manger. 4 portions = 3 jours de conservation."], 3, null, null]
+  ],
+  homme: [
+    ["p1", "Poulet au curry coco, lentilles corail et chou-fleur", "plat", 5, 30, ["Plaque de cuisson"], 608, 61.1, 24, ["1,1 kg blanc de poulet | Viande & poisson", "90 g lentilles corail | Épicerie", "1,1 kg chou-fleur | Fruits & légumes", "450 ml lait de coco allégé | Épicerie", "4 oignons | Fruits & légumes", "8 gousses ail | Fruits & légumes", "70 g huile d'olive | Épicerie", "1 curry (poudre sans additif) | Épicerie"], ["Couper le poulet en dés, émincer oignons et ail, détailler le chou-fleur en petits bouquets.", "Dorer poulet et oignons 5 min dans l'huile.", "Ajouter le curry, les lentilles, le chou-fleur, le lait de coco et un peu d'eau, saler, mijoter 18 min.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 4, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["p2", "Chili de dinde aux légumes, peu de haricots, sans gluten", "plat", 5, 30, ["Plaque de cuisson"], 605, 57.3, 22, ["1,1 kg dinde hachée | Viande & poisson", "190 g haricots rouges cuits (boîte, égouttés) | Épicerie", "900 g tomates concassées | Épicerie", "450 g champignons de Paris | Fruits & légumes", "4 oignons | Fruits & légumes", "750 g courgettes | Fruits & légumes", "95 g huile d'olive | Épicerie"], ["Faire revenir oignons, courgettes en dés, champignons émincés et dinde hachée 6 min dans l'huile.", "Ajouter cumin, coriandre moulue, tomates et haricots, mijoter 15 min.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 4, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["p3", "Cabillaud, brocoli et purée de chou-fleur à l'huile d'olive (four)", "plat", 5, 25, ["Four", "Mixeur plongeant"], 600, 64.9, 17, ["1,4 kg filet de cabillaud | Viande & poisson", "1,1 kg brocoli | Fruits & légumes", "1,1 kg chou-fleur | Fruits & légumes", "90 g huile d'olive | Épicerie", "90 g jus de citron | Fruits & légumes", "60 g amandes effilées | Épicerie"], ["Cuire le chou-fleur 15 min à l'eau salée, l'égoutter et le mixer avec la moitié de l'huile pour une purée.", "Four à 200 °C : brocoli huilé et cabillaud citronné, 15 min.", "Répartir purée, brocoli et cabillaud en 5 boîtes, amandes effilées au moment de manger."], 3, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["p4", "Boulettes de dinde sans œuf, sauce tomate-courgette", "plat", 5, 30, ["Airfryer", "Plaque de cuisson"], 611, 61.2, 18, ["1,3 kg dinde hachée | Viande & poisson", "45 g graines de lin moulues | Épicerie", "4 oignons | Fruits & légumes", "900 g tomates concassées | Épicerie", "1,1 kg courgettes | Fruits & légumes", "75 g huile d'olive | Épicerie"], ["Mélanger dinde, graines de lin moulues, un oignon haché, sel et herbes de Provence ; former environ 25 boulettes.", "Airfryer 190 °C, 12 min, en retournant à mi-cuisson.", "Faire revenir courgettes en dés et l'oignon restant dans l'huile, ajouter les tomates, 10 min.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 4, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["p5", "Velouté de courgette et chou-fleur au coco, dés de dinde rôtie", "plat", 5, 30, ["Plaque de cuisson", "Mixeur plongeant"], 603, 62.5, 20, ["1,1 kg courgettes | Fruits & légumes", "1,1 kg chou-fleur | Fruits & légumes", "4 oignons | Fruits & légumes", "380 ml lait de coco allégé | Épicerie", "30 g huile d'olive | Épicerie", "1,2 kg escalope de dinde | Viande & poisson", "60 g graines de courge | Épicerie"], ["Cuire courgettes en cubes, chou-fleur en bouquets et oignon dans de l'eau salée à hauteur 20 min.", "Ajouter le lait de coco et mixer au mixeur plongeant.", "Dorer la dinde en dés dans l'huile, 6 min, et la répartir sur les veloutés avec les graines de courge.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 4, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["p6", "Curry de crevettes, courgette et haricots verts", "plat", 5, 25, ["Plaque de cuisson"], 597, 60.0, 21, ["1,4 kg crevettes cuites décortiquées | Viande & poisson", "600 ml lait de coco allégé | Épicerie", "300 g carottes | Fruits & légumes", "750 g courgettes | Fruits & légumes", "450 g haricots verts | Fruits & légumes", "3 oignons | Fruits & légumes", "80 g huile d'olive | Épicerie", "8 gousses ail | Fruits & légumes"], ["Faire revenir oignons, ail, carottes en fines rondelles, courgettes en dés et haricots verts coupés dans l'huile 8 min.", "Ajouter curry, gingembre et lait de coco, mijoter 5 min, puis les crevettes 2 min.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 3, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["p7", "Saumon, haricots verts au citron et sauce yaourt-aneth (four)", "plat", 5, 20, ["Four"], 598, 48.9, 15, ["940 g pavés de saumon | Viande & poisson", "1,5 kg haricots verts | Fruits & légumes", "450 g yaourt au soja nature sans sucres | Rayon frais", "38 g amandes effilées | Épicerie", "22 g huile d'olive | Épicerie", "90 g jus de citron | Fruits & légumes"], ["Four à 200 °C : saumon et haricots verts huilés, citron, 15 min.", "Mélanger le yaourt au soja avec aneth, sel, poivre et un peu de jus de citron.", "Répartir en 5 boîtes, sauce et amandes effilées au moment de manger."], 3, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["p9", "Velouté de butternut au coco, dés de poulet rôti", "plat", 5, 30, ["Plaque de cuisson", "Mixeur plongeant"], 613, 64.3, 25, ["680 g butternut | Fruits & légumes", "450 g chou-fleur | Fruits & légumes", "4 oignons | Fruits & légumes", "8 gousses ail | Fruits & légumes", "380 ml lait de coco allégé | Épicerie", "45 g huile d'olive | Épicerie", "1,2 kg blanc de poulet | Viande & poisson", "60 g graines de courge | Épicerie"], ["Cuire butternut en cubes, chou-fleur en bouquets, oignon et ail dans de l'eau salée à hauteur 20 min.", "Ajouter le lait de coco et mixer au mixeur plongeant.", "Dorer le poulet en dés dans l'huile, 7 min, avec sel, poivre et un peu de noix de muscade, et le répartir sur les veloutés avec les graines de courge.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 4, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["p10", "Courge spaghetti, sauce tomate et boulettes de poulet sans œuf", "plat", 5, 40, ["Four", "Plaque de cuisson"], 607, 63.2, 24, ["900 g courge spaghetti | Fruits & légumes", "1,3 kg poulet haché | Viande & poisson", "45 g graines de lin moulues | Épicerie", "750 g tomates concassées | Épicerie", "3 oignons | Fruits & légumes", "8 gousses ail | Fruits & légumes", "80 g huile d'olive | Épicerie"], ["Four à 200 °C : couper la courge spaghetti en deux dans la longueur, la cuire 35 min face coupée vers le bas, puis égrener la chair à la fourchette.", "Mélanger le poulet haché, les graines de lin, un oignon haché, sel et herbes de Provence ; former environ 25 boulettes, les dorer 8 min à la poêle dans la moitié de l'huile.", "Faire revenir l'oignon restant et l'ail dans le reste d'huile, ajouter les tomates, 10 min, puis les boulettes.", "Répartir courge et boulettes en 5 boîtes (1 boîte = 1 portion)."], 4, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["p11", "Poulet tikka masala tomate-coco et chou-fleur", "plat", 5, 30, ["Plaque de cuisson"], 613, 64.5, 19, ["1,3 kg blanc de poulet | Viande & poisson", "750 g tomates concassées | Épicerie", "520 ml lait de coco allégé | Épicerie", "750 g chou-fleur | Fruits & légumes", "4 oignons | Fruits & légumes", "8 gousses ail | Fruits & légumes", "70 g huile d'olive | Épicerie", "2,5 càc garam masala | Épicerie", "2,5 càc curcuma et cumin (mélange) | Épicerie"], ["Couper le poulet en dés et le faire dorer 5 min dans l'huile, réserver.", "Faire revenir oignon et ail, ajouter les épices 1 min, puis tomates et lait de coco, mijoter 10 min.", "Ajouter le chou-fleur en petits bouquets 8 min, puis le poulet 5 min.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 4, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["p12", "Saumon en croûte de noisettes-herbes et brocoli rôti (four)", "plat", 5, 25, ["Four"], 601, 48.5, 14, ["940 g pavés de saumon | Viande & poisson", "60 g noisettes concassées | Épicerie", "1,5 kg brocoli | Fruits & légumes", "22 g huile d'olive | Épicerie", "90 g jus de citron | Fruits & légumes"], ["Four à 200 °C : brocoli en bouquets huilé, 10 min.", "Poser les pavés de saumon sur une plaque, arroser de citron, couvrir de noisettes concassées, herbes de Provence, sel et poivre.", "Enfourner le saumon avec le brocoli 12 min de plus.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 3, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["p13", "Poulet, champignons et épinards à la crème de coco", "plat", 5, 25, ["Plaque de cuisson"], 603, 69.0, 11, ["1,3 kg blanc de poulet | Viande & poisson", "900 g champignons de Paris | Fruits & légumes", "750 g jeunes pousses d'épinards | Fruits & légumes", "600 ml lait de coco allégé | Épicerie", "3 oignons | Fruits & légumes", "8 gousses ail | Fruits & légumes", "60 g huile d'olive | Épicerie"], ["Dorer le poulet en dés 6 min dans l'huile avec l'oignon et l'ail, réserver.", "Faire revenir les champignons émincés 5 min, ajouter le lait de coco, sel, poivre et muscade, mijoter 5 min.", "Ajouter les épinards 2 min puis le poulet.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 3, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["p8", "Poulet rôti aux herbes, brocoli et haricots verts (four)", "plat", 5, 15, ["Four"], 603, 67.5, 17, ["1,3 kg blanc de poulet | Viande & poisson", "980 g brocoli | Fruits & légumes", "900 g haricots verts | Fruits & légumes", "100 g huile d'olive | Épicerie", "8 gousses ail | Fruits & légumes"], ["Four à 200 °C : brocoli et haricots verts huilés avec l'ail, herbes de Provence, 15 min.", "Ajouter le poulet en morceaux, 20 min de plus.", "Répartir en 5 boîtes (1 boîte = 1 portion)."], 3, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["t1", "Salade de thon, maïs, carotte et concombre (à emporter, sans réchauffer)", "emporter", 1, 15, [], 603, 61.1, 22, ["220 g thon au naturel égoutté | Épicerie", "38 g maïs (boîte, égoutté) | Épicerie", "90 g carotte râpée | Fruits & légumes", "150 g concombre | Fruits & légumes", "120 g tomates cerises | Fruits & légumes", "18 g huile d'olive | Épicerie", "22 g jus de citron | Fruits & légumes", "12 g noix | Épicerie"], ["La veille : râper la carotte, couper concombre et tomates en dés.", "Mélanger avec le thon émietté et le maïs, assaisonner d'huile d'olive, de jus de citron, de sel et de poivre, noix concassées au dernier moment.", "Boîte hermétique au frais (glacière avec pain de glace si besoin) : se mange froide, sans réchauffage."], 1, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["t2", "Salade de poulet, pois chiches et légumes croquants (à emporter, sans réchauffer)", "emporter", 1, 20, ["Plaque de cuisson"], 588, 56.2, 22, ["220 g blanc de poulet | Viande & poisson", "60 g pois chiches cuits (boîte, égouttés) | Épicerie", "120 g concombre | Fruits & légumes", "60 g carotte râpée | Fruits & légumes", "90 g tomates cerises | Fruits & légumes", "22 g huile d'olive | Épicerie", "22 g jus de citron | Fruits & légumes"], ["La veille : cuire le poulet en dés 8 min à la poêle avec un peu de cumin, laisser refroidir.", "Mélanger poulet, pois chiches, légumes en dés, huile, citron, sel et poivre.", "Boîte hermétique au frais (glacière avec pain de glace si besoin) : se mange froide, sans réchauffage."], 1, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["t4", "Salade de courge spaghetti, poulet rôti et noix (à emporter, sans réchauffer)", "emporter", 1, 40, ["Four", "Plaque de cuisson"], 605, 54.5, 18, ["150 g courge spaghetti | Fruits & légumes", "220 g blanc de poulet | Viande & poisson", "90 g concombre | Fruits & légumes", "90 g tomates cerises | Fruits & légumes", "15 g noix | Épicerie", "18 g huile d'olive | Épicerie", "22 g jus de citron | Fruits & légumes"], ["La veille : cuire la courge spaghetti au four 35 min (moitiés face coupée vers le bas), égrener la chair et la laisser refroidir.", "Cuire le poulet en dés 8 min à la poêle avec un peu de cumin, laisser refroidir.", "Mélanger courge, poulet, concombre et tomates en dés, huile, citron, sel et poivre, noix au dernier moment.", "Boîte hermétique au frais (glacière avec pain de glace si besoin) : se mange froide, sans réchauffage."], 1, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["t5", "Salade de brocoli, saumon et noisettes (à emporter, sans réchauffer)", "emporter", 1, 25, ["Plaque de cuisson"], 602, 49.4, 14, ["220 g brocoli | Fruits & légumes", "195 g pavé de saumon | Viande & poisson", "6 g noisettes concassées | Épicerie", "30 g oignon rouge | Fruits & légumes", "60 g yaourt au soja nature sans sucres | Rayon frais", "6 g huile d'olive | Épicerie", "18 g jus de citron | Fruits & légumes"], ["La veille : cuire le brocoli en petits bouquets 5 min à l'eau, le refroidir sous l'eau froide et l'égoutter.", "Cuire le saumon 10 min à la poêle ou au four, l'émietter une fois froid.", "Mélanger avec l'oignon émincé, l'huile, le citron, le yaourt au soja, sel et poivre, noisettes au dernier moment.", "Boîte hermétique au frais (glacière avec pain de glace si besoin) : se mange froide, sans réchauffage."], 1, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["t3", "Salade de haricots verts, saumon et pommes de terre (à emporter, sans réchauffer)", "emporter", 1, 25, ["Plaque de cuisson"], 602, 45.1, 22, ["60 g pommes de terre | Fruits & légumes", "220 g haricots verts | Fruits & légumes", "195 g pavé de saumon | Viande & poisson", "30 g oignon rouge | Fruits & légumes", "9 g huile d'olive | Épicerie", "22 g jus de citron | Fruits & légumes"], ["La veille : cuire les pommes de terre en cubes 15 min à l'eau, les haricots verts 8 min, puis les refroidir.", "Cuire le saumon 10 min à la poêle ou au four, l'émietter une fois froid.", "Mélanger avec l'oignon émincé, l'huile, le citron, sel, poivre et ciboulette.", "Boîte hermétique au frais (glacière avec pain de glace si besoin) : se mange froide, sans réchauffage."], 1, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["v1", "Dahl de lentilles corail, tofu et épinards au lait de coco", "vegetal", 5, 35, ["Plaque de cuisson"], 591, 53.6, 28, ["90 g lentilles corail | Épicerie", "110 g patate douce | Fruits & légumes", "340 ml lait de coco allégé | Épicerie", "1,2 kg tofu ferme nature | Rayon frais", "750 g jeunes pousses d'épinards | Fruits & légumes", "4 oignons | Fruits & légumes", "8 gousses ail | Fruits & légumes", "22 g huile d'olive | Épicerie", "75 g protéines de pois nature | Épicerie", "2,5 càc curcuma, cumin et garam masala (mélange) | Épicerie", "1 càc gingembre en poudre | Épicerie"], ["Faire revenir oignon et ail hachés dans l'huile 4 min, ajouter curcuma, cumin, garam masala et gingembre 1 min.", "Ajouter lentilles corail rincées, patate douce en petits dés, lait de coco et de l'eau à hauteur, mijoter 20 min.", "Ajouter le tofu en dés et les épinards 3 min, puis les protéines de pois délayées dans un peu d'eau, saler, coriandre fraîche si possible.", "Répartir en 5 boîtes : 2 au frais (jeudi compris), 3 au congélateur à sortir la veille au frigo."], 3, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["v2", "Curry de pois chiches, tofu et épinards au garam masala", "vegetal", 5, 30, ["Plaque de cuisson"], 617, 56.5, 28, ["300 g pois chiches cuits (boîte, égouttés) | Épicerie", "1,3 kg tofu ferme nature | Rayon frais", "750 g jeunes pousses d'épinards | Fruits & légumes", "380 ml lait de coco allégé | Épicerie", "600 g tomates concassées | Épicerie", "4 oignons | Fruits & légumes", "15 g huile d'olive | Épicerie", "75 g protéines de pois nature | Épicerie", "2,5 càc garam masala | Épicerie", "1 càc coriandre moulue | Épicerie", "1 càc gingembre en poudre | Épicerie"], ["Faire revenir l'oignon dans l'huile 4 min, ajouter garam masala, coriandre et gingembre 1 min.", "Ajouter tomates, lait de coco, pois chiches égouttés et tofu en dés, mijoter 15 min, puis les épinards 3 min.", "Hors du feu, ajouter les protéines de pois délayées dans un peu d'eau.", "Répartir en 5 boîtes : 2 au frais (jeudi compris), 3 au congélateur à sortir la veille au frigo."], 3, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["v3", "Tofu masala tomate-coco et courgette", "vegetal", 5, 30, ["Plaque de cuisson"], 611, 48.0, 27, ["1,6 kg tofu ferme nature | Rayon frais", "1,1 kg tomates concassées | Épicerie", "450 ml lait de coco allégé | Épicerie", "900 g courgettes | Fruits & légumes", "4 oignons | Fruits & légumes", "22 g huile d'olive | Épicerie", "8 gousses ail | Fruits & légumes", "2,5 càc garam masala | Épicerie", "2,5 càc curcuma et cumin (mélange) | Épicerie"], ["Faire dorer le tofu en dés 6 min dans la moitié de l'huile, réserver.", "Faire revenir oignon, ail et courgette en dés, ajouter les épices 1 min, puis tomates et lait de coco, mijoter 12 min.", "Remettre le tofu 3 min.", "Répartir en 5 boîtes : 2 au frais (jeudi compris), 3 au congélateur à sortir la veille au frigo."], 3, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["v5", "Courge spaghetti, tofu et sauce tomate-coco épicée", "vegetal", 5, 40, ["Four", "Plaque de cuisson"], 608, 53.1, 28, ["750 g courge spaghetti | Fruits & légumes", "1,4 kg tofu ferme nature | Rayon frais", "750 g tomates concassées | Épicerie", "380 ml lait de coco allégé | Épicerie", "4 oignons | Fruits & légumes", "22 g huile d'olive | Épicerie", "75 g protéines de pois nature | Épicerie", "2,5 càc garam masala | Épicerie", "2,5 càc curcuma et cumin (mélange) | Épicerie"], ["Four à 200 °C : cuire la courge spaghetti 35 min (moitiés face coupée vers le bas), égrener la chair.", "Faire dorer le tofu en dés 6 min, réserver. Faire revenir l'oignon, ajouter les épices 1 min, puis tomates et lait de coco, mijoter 10 min.", "Ajouter le tofu et les protéines de pois délayées, servir sur la courge.", "Répartir en 5 boîtes : 2 au frais (jeudi compris), 3 au congélateur à sortir la veille au frigo."], 3, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["v6", "Velouté de butternut au curry, tofu grillé et graines de courge", "vegetal", 5, 35, ["Plaque de cuisson", "Mixeur plongeant"], 615, 53.7, 23, ["520 g butternut | Fruits & légumes", "1,3 kg tofu ferme nature | Rayon frais", "380 ml lait de coco allégé | Épicerie", "4 oignons | Fruits & légumes", "450 g jeunes pousses d'épinards | Fruits & légumes", "15 g huile d'olive | Épicerie", "75 g protéines de pois nature | Épicerie", "60 g graines de courge | Épicerie", "2,5 càc curry (poudre sans additif) | Épicerie", "1 càc gingembre en poudre | Épicerie"], ["Cuire butternut en cubes, oignon et épinards dans de l'eau salée à hauteur 20 min, avec curry et gingembre.", "Ajouter le lait de coco et les protéines de pois, mixer au mixeur plongeant.", "Dorer le tofu en dés 6 min dans l'huile et le répartir sur les veloutés avec les graines de courge.", "Répartir en 5 boîtes : 2 au frais (jeudi compris), 3 au congélateur à sortir la veille au frigo."], 3, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["v4", "Curry épicé de chou-fleur, lentilles corail et tofu (curcuma, cumin)", "vegetal", 5, 35, ["Plaque de cuisson"], 604, 55.1, 32, ["90 g lentilles corail | Épicerie", "300 g carottes | Fruits & légumes", "1,5 kg chou-fleur | Fruits & légumes", "300 ml lait de coco allégé | Épicerie", "1,2 kg tofu ferme nature | Rayon frais", "3 oignons | Fruits & légumes", "19 g huile d'olive | Épicerie", "75 g protéines de pois nature | Épicerie", "2,5 càc curcuma, cumin et coriandre (mélange) | Épicerie", "1 càc gingembre en poudre | Épicerie"], ["Faire revenir l'oignon dans l'huile 3 min, ajouter les épices 1 min.", "Ajouter lentilles rincées, carottes en rondelles, chou-fleur en petits bouquets, lait de coco et de l'eau à hauteur, mijoter 25 min.", "Ajouter le tofu en dés 3 min, puis les protéines de pois délayées, saler.", "Répartir en 5 boîtes : 2 au frais (jeudi compris), 3 au congélateur à sortir la veille au frigo."], 3, {"n": "riz basmati", "c": 0.78, "k": 3.5, "cook": 2.8, "base": 65, "load": 110, "peak": 185, "race": 160}, null],
+    ["hb1", "Muffins salés œuf, jambon et fromage (four)", "petit-dej", 4, 30, ["Four"], 492, 37.3, 28, ["10 œufs | Crèmerie", "155 g jambon blanc | Viande & poisson", "85 g gruyère râpé | Crèmerie", "8 tranches pain complet | Boulangerie"], ["Battre les œufs, ajouter jambon en dés, gruyère et poivre.", "Verser dans 12 moules à muffins, four 180 °C, 18 min.", "Congélation : emballer par 3. Réchauffer 1 min au micro-ondes, servir avec 2 à 3 tranches de pain complet."], 60, null, null],
+    ["hb2", "Frittata jambon, pommes de terre et courgette (four)", "petit-dej", 4, 35, ["Four", "Plaque de cuisson"], 559, 32.9, 44, ["7 œufs | Crèmerie", "135 g jambon blanc | Viande & poisson", "410 g pommes de terre | Fruits & légumes", "135 g courgettes | Fruits & légumes", "1,5 oignons | Fruits & légumes", "2 càs huile d'olive | Épicerie", "85 g gruyère râpé | Crèmerie", "7 tranches pain complet | Boulangerie"], ["Cuire les pommes de terre en dés à la poêle avec l'oignon et la courgette en dés, dans l'huile, 12 min.", "Verser les œufs battus avec jambon en dés et gruyère, four 180 °C, 20 min.", "Découper en 4 parts. 4 portions = 3 à 4 jours au frais. Servir avec 2 tranches de pain complet."], 4, null, null],
+    ["hb5", "Cake salé jambon, gruyère et petits pois (four)", "petit-dej", 4, 50, ["Four"], 548, 35.0, 41, ["7 œufs | Crèmerie", "185 g farine | Épicerie", "170 ml lait demi-écrémé | Crèmerie", "135 g jambon blanc | Viande & poisson", "100 g gruyère râpé | Crèmerie", "200 g petits pois (surgelés) | Surgelés", "1,5 càs huile d'olive | Épicerie"], ["Mélanger farine, 1 sachet de levure, œufs, lait et huile, saler et poivrer.", "Ajouter jambon en dés, gruyère et petits pois, verser dans un moule à cake.", "Four 180 °C, 40 min. Couper en 4 parts. 4 portions = 3 jours au frais, ou congélation par part.", "Réchauffer 1 min au micro-ondes."], 3, null, null],
+    ["hb6", "Quiche sans pâte jambon, poireaux et gruyère (four)", "petit-dej", 4, 45, ["Four", "Plaque de cuisson"], 518, 35.6, 41, ["7 œufs | Crèmerie", "200 ml lait demi-écrémé | Crèmerie", "410 g poireaux | Fruits & légumes", "135 g jambon blanc | Viande & poisson", "100 g gruyère râpé | Crèmerie", "50 g farine | Épicerie", "7 tranches pain complet | Boulangerie"], ["Faire fondre les poireaux en rondelles 10 min à la poêle.", "Battre œufs, lait et farine, ajouter poireaux, jambon en dés et gruyère, saler et poivrer.", "Verser dans un plat, four 180 °C, 30 min. Couper en 4 parts.", "Servir avec 2 tranches de pain complet. 4 portions = 3 jours au frais."], 3, null, null],
+    ["hb4", "Pancakes protéinés banane-avoine (poêle)", "petit-dej", 4, 30, ["Plaque de cuisson", "Mixeur plongeant"], 534, 31.1, 65, ["240 g flocons d'avoine | Épicerie", "7 œufs | Crèmerie", "3 bananes | Fruits & légumes", "340 g skyr nature | Crèmerie", "50 g miel | Épicerie"], ["Mixer flocons, œufs, bananes et la moitié du skyr avec 1 càc de levure chimique.", "Cuire des petits pancakes à la poêle antiadhésive, 2 min par face (environ 5 par portion).", "Congélation : séparer par du papier cuisson. Réchauffer 40 s au micro-ondes, skyr restant et miel par-dessus."], 60, null, true],
+    ["hs1", "Skyr, banane et amandes", "collation", 4, 5, [], 340, 27.8, 24, ["800 g skyr nature | Crèmerie", "3 bananes | Fruits & légumes", "95 g amandes | Épicerie"], ["Répartir le skyr en 4 pots, ajouter banane en rondelles et amandes au moment de manger.", "4 portions = 4 jours de conservation : à refaire tous les 4 jours."], 4, null, null],
+    ["hs2", "Riz au lait protéiné", "collation", 4, 30, ["Plaque de cuisson"], 353, 21.0, 49, ["130 g riz rond | Épicerie", "800 ml lait demi-écrémé | Crèmerie", "38 g sucre | Épicerie", "380 g skyr nature | Crèmerie", "32 g amandes effilées | Épicerie"], ["Cuire le riz dans le lait 25 min à feu doux en remuant.", "Hors du feu, ajouter le sucre puis le skyr. Répartir en 4 pots, amandes au moment de manger.", "4 portions = 4 jours de conservation : à refaire tous les 4 jours."], 4, null, null],
+    ["hs3", "Cottage cheese, miel et noix", "collation", 4, 5, [], 359, 21.2, 17, ["640 g cottage cheese | Crèmerie", "48 g miel | Épicerie", "95 g noix | Épicerie"], ["Répartir le cottage cheese en 4 pots, ajouter miel et noix concassées au moment de manger.", "4 portions = 4 jours de conservation : à refaire tous les 4 jours."], 4, null, null],
+    ["hs4", "Energy balls dattes, cacao et amandes (mixeur)", "collation", 6, 15, ["Mixeur plongeant"], 355, 10.3, 33, ["190 g dattes dénoyautées | Épicerie", "105 g flocons d'avoine | Épicerie", "105 g amandes | Épicerie", "29 g cacao non sucré | Épicerie", "75 g purée d'amande | Épicerie"], ["Mixer tous les ingrédients jusqu'à obtenir une pâte collante.", "Former environ 24 boules, garder au frais ou au congélateur. Portion = 4 boules."], 14, null, null],
+    ["he1", "Mix fruits secs & chocolat noir", "energie", 6, 5, [], 385, 8.8, 30, ["180 g amandes | Épicerie", "180 g raisins secs | Épicerie", "120 g chocolat noir | Épicerie"], ["Mélanger et répartir en 6 sachets ou boîtes."], 30, null, null],
+    ["he2", "Boisson énergétique maison (jus de raisin + sel)", "boisson", 6, 5, [], 180, 0.9, 45, ["1,8 l jus de raisin | Boissons", "1 càc sel | Épicerie"], ["Mélanger le jus et le sel, répartir en 6 bouteilles de 300 ml.", "Garder au frais et boire dans la journée."], 3, null, null],
+    ["he3", "Tartines pain complet, miel et banane (charge)", "energie", 2, 5, [], 413, 9.4, 84, ["6 tranches pain complet | Boulangerie", "50 g miel | Épicerie", "2 bananes | Fruits & légumes"], ["Toaster 3 tranches de pain complet par portion, étaler le miel, ajouter la banane en rondelles.", "À prendre en plus d'une collation les jours de charge ou en ravitaillement avant la course."], 1, null, null]
+  ]
+};
+function seedRecipes() {
+  return RECIPE_DATA[PROFILE].map(([id, name, type, portions, prep, eq, kcal, prot, carbs, ings, steps, keep, fec, we]) =>
+    ({ id, name, type, portions, prep, eq, kcal, prot, carbs, keep, seedV: 12, fec: fec || undefined, we: we || undefined, ings: ings.map(parseIng), steps }));
+}
+
+const mergeSettings = st => {
+  const o = { ...DEF_SETTINGS, ...(st || {}) };
+  o.levels = {};
+  for (const k of Object.keys(DEF_SETTINGS.levels)) o.levels[k] = { ...DEF_SETTINGS.levels[k], ...((st && st.levels && st.levels[k]) || {}) };
+  return o;
+};
+const fresh = () => ({ settings: mergeSettings(), recipes: seedRecipes(), plan: {}, batches: [], stock: [], fridge: [], snap: {}, eaten: {}, cooked: {}, lastCook: '', pending: [], events: PROFILE === 'homme' ? [{ id: 'e1', name: 'SaintéLyon', date: '2026-11-28', level: 'big' }] : [], weights: PROFILE === 'femme' ? [{ d: '2026-11-16', kg: 63.5 }] : [] });
+let S;
+function load() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(LS_KEY));
+    if (raw) {
+      raw.settings = mergeSettings(raw.settings);
+      if (!raw.settings.rst) { raw.settings.rst = true; raw.settings.startDate = '2026-11-21'; Object.assign(raw, { stock: [], fridge: [], cooked: {}, eaten: {}, pending: [], snap: {}, plan: {}, batches: [], lastCook: '' }); }
+      if (!raw.settings.b5) { raw.settings.batchPortions = 5; raw.settings.b5 = true; }
+      if (PROFILE === 'femme' && !raw.settings.lc50) Object.assign(raw.settings, { protMin: 105, protMax: 135, lc50: true });
+      if (PROFILE === 'homme' && !raw.settings.w75) { Object.assign(raw.settings, { weight: 75, protMin: 125, protMax: 170, kcal: 2350, trainBonus: 280, w75: true }); }
+      if (PROFILE === 'homme' && !raw.settings.x15) Object.assign(raw.settings, { protMin: 135, protMax: 195, kcal: 2550, trainBonus: 250, x15: true });
+      S = { ...fresh(), ...raw };
+      for (const sd of seedRecipes()) {
+        const i = S.recipes.findIndex(r => r.id === sd.id);
+        if (i < 0) S.recipes.push(sd); else if ((S.recipes[i].seedV || 0) < sd.seedV) S.recipes[i] = sd;
+      }
+      const ids = new Set(seedRecipes().map(x => x.id)); S.recipes = S.recipes.filter(r => !r.seedV || ids.has(r.id));
+      const ok = x => S.recipes.some(r => r.id === x.recipeId); S.stock = (S.stock || []).filter(ok); S.fridge = (S.fridge || []).filter(ok);
+      S.recipes.forEach(r => { if (!r.type) r.type = 'plat'; if (r.carbs === undefined) r.carbs = 0; });
+      return;
+    }
+  } catch (e) {}
+  S = fresh();
+}
+function save() { _proj = null; try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch (e) {} }
+load();
+
+/* ============ Utilitaires ============ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const iso = d => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const parseISO = s => { const [y, m, d] = s.split('-').map(Number); return new Date(y, m - 1, d); };
+const uid = () => 'x' + Math.random().toString(36).slice(2, 9);
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const recipe = id => S.recipes.find(r => r.id === id);
+const fmtN = n => { const v = n >= 10 ? Math.round(n) : Math.round(n * 10) / 10; return String(v).replace('.', ','); };
+function fmtQty(q, u) {
+  if (u === 'g' && q >= 1000) return fmtN(q / 1000) + ' kg';
+  if (u === 'ml' && q >= 1000) return fmtN(q / 1000) + ' l';
+  if (q > 1 && ['boîte', 'sachet', 'pot', 'gousse', 'tranche', 'pincée'].includes(u)) u += 's';
+  return (q ? fmtN(q) : '') + (u ? ' ' + u : '');
+}
+function parseIng(line) {
+  const [main, aisle] = line.split('|').map(s => s.trim());
+  const m = (main || '').match(/^(\d+(?:[.,]\d+)?)\s*(.*)$/);
+  if (!m) return { q: 0, u: '', n: main || '', a: aisle || 'Divers' };
+  const q = parseFloat(m[1].replace(',', '.'));
+  let rest = m[2], u = '';
+  const w = rest.split(/\s+/)[0].toLowerCase();
+  if (UNITS.includes(w)) { u = UNIT_NORM[w] || w; rest = rest.slice(w.length).trim(); }
+  rest = rest.replace(/^(de |d'|d’)/i, '');
+  return { q, u, n: rest, a: aisle || 'Divers' };
+}
+const ingLine = i => `${i.q ? fmtN(i.q) : ''}${i.u ? ' ' + i.u : ''} ${i.n}${i.a && i.a !== 'Divers' ? ' | ' + i.a : ''}`.trim();
+
+/* ============ État d'interface ============ */
+const today = new Date();
+const ui = {
+  tab: 'today',
+  month: new Date(today.getFullYear(), today.getMonth(), 1),
+  eqFilter: [], quick: false, cat: 'plat', off: 0,
+  sel: {}, range: { from: iso(today), to: iso(addDays(today, 6)) },
+  ticked: {},         // cases cochées de la liste de courses
+  modals: [], rvP: null
+};
+
+/* ============ Calculs ============ */
+function dayData(k) {
+  const tr = isTrain(k);
+  if (k < iso(today)) {
+    const eaten = S.eaten[k] || [], sn = (S.snap || {})[k] || { meals: [], cook: [] };
+    const meals = sn.meals.map(m => ({ ...m, eaten: eaten.some(e => e.slot === m.slot && e.recipeId === m.recipeId) }));
+    eaten.forEach(e => { if (!meals.some(m => m.slot === e.slot && m.recipeId === e.recipeId)) meals.push({ ...e, eaten: true }); else { const m = meals.find(x => x.slot === e.slot && x.recipeId === e.recipeId); m.portions = e.portions; } });
+    return { meals, train: tr, cook: sn.cook || [] };
+  }
+  const p = getProj().find(x => x.k === k);
+  return p ? { ...p, train: tr } : { meals: [], train: tr, cook: [] };
+}
+const isTrain = k => !!(S.plan[k] && S.plan[k].train);
+function totalsOf(meals) {
+  let kcal = 0, prot = 0, carbs = 0;
+  for (const m of meals) { const r = recipe(m.recipeId); if (r) { kcal += r.kcal * m.portions; prot += r.prot * m.portions; carbs += (r.carbs || 0) * m.portions; } }
+  return { kcal, prot, carbs };
+}
+function dayTotals(k) { const m = dayData(k).meals; return totalsOf(k < iso(today) ? m.filter(x => x.eaten) : m); }
+const hasMeals = k => { const m = dayData(k).meals; return k < iso(today) ? m.some(x => x.eaten) : m.length > 0; };
+const ICON = { race: '🏁', peak: '🔥', load: '🍝', recovery: '💤' };
+const PRIO = { race: 4, peak: 3, recovery: 2, load: 1 };
+function phaseFor(k) {
+  const d = parseISO(k); let best = null;
+  for (const ev of S.events || []) {
+    const L = S.settings.levels[ev.level]; if (!L) continue;
+    const diff = Math.round((parseISO(ev.date) - d) / 864e5); let p = null;
+    if (diff === 0) p = { type: 'race', kcal: L.raceKcal, carbs: L.raceCarbs, prot: 0, label: 'Jour J' };
+    else if (diff > 0 && diff <= L.peakDays) p = { type: 'peak', kcal: L.loadKcal, carbs: L.peakCarbs, prot: 0, label: 'Charge finale' };
+    else if (diff > 0 && diff <= L.loadDays) p = { type: 'load', kcal: L.loadKcal, carbs: L.loadCarbs, prot: 0, label: 'Charge glucidique' };
+    else if (diff < 0 && -diff <= L.recoveryDays) p = { type: 'recovery', kcal: L.recoveryKcal, carbs: 0, prot: L.recoveryProt, label: 'Récupération' };
+    if (p && (!best || PRIO[p.type] > PRIO[best.type])) best = { ...p, ev, diff };
+  }
+  return best;
+}
+function dayTarget(k) { const ph = phaseFor(k); return S.settings.kcal + (isTrain(k) ? S.settings.trainBonus : 0) + (ph ? ph.kcal : 0); }
+function protRange(k) { const ph = phaseFor(k), b = ph ? ph.prot : 0; return { min: S.settings.protMin + b, max: S.settings.protMax + b }; }
+function carbsTarget(k) { const ph = phaseFor(k), g = ph && ph.carbs ? ph.carbs : S.settings.carbsGkg; return g ? g * S.settings.weight : 0; }
+function protClass(p, k) { const r = protRange(k); const tol = S.settings.protTol || 0; return p === 0 ? '' : p < r.min - tol ? 'low' : p > r.max + tol ? 'high' : 'ok'; }
+function phaseBanner(ph) {
+  if (!ph) return '';
+  const j = ph.diff > 0 ? 'J-' + ph.diff : ph.diff < 0 ? 'J+' + (-ph.diff) : 'Jour J', bits = [];
+  if (ph.kcal) bits.push('+' + ph.kcal + ' kcal'); if (ph.carbs) bits.push(ph.carbs + ' g/kg de glucides'); if (ph.prot) bits.push('+' + ph.prot + ' g de protéines');
+  return `<div class="card" style="margin-top:10px;border-color:var(--brand)"><b>${ICON[ph.type]} ${esc(ph.label)}</b> · ${esc(ph.ev.name)} (${j})<div class="mut">${bits.join(' · ')}</div></div>`;
+}
+const slotKind = n => /petit|matin/i.test(n) ? 'bf' : /collation|snack|go[uû]ter/i.test(n) ? 'sn' : 'main';
+const HORIZON = 28;
+function getProj() {
+  if (!_proj) {
+    const p = project(HORIZON), c = p[0] ? p[0].cook : [];
+    let dirty = false;
+    if (JSON.stringify(c) !== JSON.stringify(S.pending || [])) { S.pending = c; dirty = true; }
+    if (p[0]) {   // instantané du jour : permet de revenir sur « hier » et de cocher un oubli
+      S.snap = S.snap || {}; const k0 = iso(today), prev = S.snap[k0] || { cook: [] };
+      const snap = { meals: p[0].meals.map(m => ({ slot: m.slot, recipeId: m.recipeId, portions: m.portions })), cook: [...new Set([...(prev.cook || []), ...c])] };
+      if (JSON.stringify(snap) !== JSON.stringify(S.snap[k0])) { S.snap[k0] = snap; dirty = true; }
+      const lim = iso(addDays(today, -14)); Object.keys(S.snap).forEach(d => { if (d < lim) { delete S.snap[d]; dirty = true; } });
+    }
+    if (dirty) save();
+    _proj = p;
+  }
+  return _proj;
+}
+function nextBatch(k, stock, cooked, mains, usePhase) {
+  const inStock = new Set(stock.map(x => x.recipeId)), ph = usePhase === false ? null : phaseFor(k);
+  const c = mains.filter(r => !inStock.has(r.id)); if (!c.length) return null;
+  const pref = r => !ph ? 0 : ph.type === 'recovery' ? r.prot : r.carbs;
+  c.sort((a, b) => (cooked[a.id] || '').localeCompare(cooked[b.id] || '') || pref(b) - pref(a));
+  return c[0];
+}
+const portionsOf = r => r.type === 'plat' ? S.settings.batchPortions : r.portions;
+/* Une collation par jour : en période de charge, on peut en prendre jusqu'à 2 portions de la même recette. */
+function snPortions(k, bf, dm, sn, avail) {
+  const ct = carbsTarget(k); if (!sn || !ct || !sn.carbs) return 1;
+  const mm = dm.filter(Boolean), pr = protRange(k), tol = S.settings.protTol || 0;
+  const baseC = (bf ? bf.carbs || 0 : 0) + mm.reduce((x, m) => x + (m.carbs || 0), 0);
+  const baseP = (bf ? bf.prot : 0) + mm.reduce((x, m) => x + m.prot, 0);
+  let n = Math.max(1, Math.min(2, Math.round((ct - baseC) / sn.carbs)));
+  while (n > 1 && baseP + n * sn.prot > pr.max + tol) n--;
+  return Math.min(n, Math.max(1, avail));
+}
+function composeDay(k, dm, bf, sn, snN) {
+  const slots = S.settings.slots, kinds = slots.map(slotKind), meals = []; let mi = 0;
+  slots.forEach((sl, si) => {
+    if (kinds[si] === 'bf') { if (bf) meals.push({ slot: sl, recipeId: bf.id, portions: 1 }); }
+    else if (kinds[si] === 'main') { const m = dm[mi++]; if (m) meals.push({ slot: sl, recipeId: m.id, portions: 1 }); }
+    else if (kinds[si] === 'sn') { if (sn) meals.push({ slot: sl, recipeId: sn.id, portions: snN || 1 }); }
+  });
+  return meals;
+}
+function project(days) {
+  const mains = S.recipes.filter(r => r.type === 'plat'), takeAll = S.recipes.filter(r => r.type === 'emporter'), vegAll = S.recipes.filter(r => r.type === 'vegetal'), vegDays = [+S.settings.vegDay1, +S.settings.vegDay2];
+  const slots = S.settings.slots, kinds = slots.map(slotKind), mainSlots = slots.filter((x, i) => kinds[i] === 'main');
+  let stock = S.stock.map(x => ({ ...x })), fridge = (S.fridge || []).map(x => ({ ...x })); const cooked = { ...S.cooked }, out = []; let last = null, tick = 0;
+  const used = {};   // ordre de passage : permet d'alterner les recettes
+  Object.keys(S.eaten).filter(d => d < iso(today)).sort().forEach(d => S.eaten[d].forEach(e => { const r = recipe(e.recipeId); if (r && r.type === 'plat') { used[e.recipeId] = tick++; last = e.recipeId; } }));
+  const sd = S.settings.startDate || '', first = sd && sd > iso(today) ? Math.round((parseISO(sd) - parseISO(iso(today))) / 864e5) : 0;
+  for (let i = 0; i < days; i++) {
+    const k = iso(addDays(today, i)), eaten = S.eaten[k] || [], cook = [];
+    if (i < first) { out.push({ k, cook: [], meals: [], pre: true }); continue; }
+    const fresh = !!sd && k === sd && !stock.length;   /* démarrage à zéro : on cuisine d'abord, on mange ensuite */
+    const toCook = [], target = S.settings.stockTarget;
+    const pend = i === first ? (S.pending || []).filter(id => recipe(id) && recipe(id).type === 'plat' && !stock.some(x => x.recipeId === id)) : [];
+    for (const id of pend) { if (stock.length + toCook.length >= target) break; toCook.push(id); }
+    while (mains.length && stock.length + toCook.length < target) {
+      const r = nextBatch(k, [...stock, ...toCook.map(id => ({ recipeId: id }))], cooked, mains, false); if (!r) break;
+      toCook.push(r.id);
+    }
+    cook.push(...toCook);
+    const addCooked = () => toCook.forEach(id => { stock.push({ recipeId: id, portions: S.settings.batchPortions }); cooked[id] = k; });
+    if (i > first || fresh) addCooked();
+    const dm = [];
+    mainSlots.forEach((sl, mi0) => {
+      const e = eaten.find(x => x.slot === sl);
+      if (e) { dm.push(recipe(e.recipeId)); last = e.recipeId; used[last] = tick++; return; }
+      /* jour du repas à emporter : le déjeuner est la salade préparée la veille (sans réchauffage) */
+      if (mi0 === 0 && takeAll.length && parseISO(k).getDay() === +S.settings.takeDay) {
+        const ti = fridge.find(x => x.portions > 0 && recipe(x.recipeId) && recipe(x.recipeId).type === 'emporter');
+        if (ti) { ti.portions--; fridge = fridge.filter(x => x.portions > 0); dm.push(recipe(ti.recipeId)); return; }
+      }
+      /* 2 dîners végétaux par semaine (protéines végétales) */
+      if (mi0 > 0 && mi0 === mainSlots.length - 1 && vegAll.length && vegDays.includes(parseISO(k).getDay())) {
+        const vi = fridge.find(x => x.portions > 0 && recipe(x.recipeId) && recipe(x.recipeId).type === 'vegetal');
+        if (vi) { vi.portions--; fridge = fridge.filter(x => x.portions > 0); dm.push(recipe(vi.recipeId)); return; }
+      }
+      const cand = stock.filter(x => x.portions > 0).sort((a, b) => ((a.recipeId === last) - (b.recipeId === last)) || ((used[a.recipeId] ?? -1) - (used[b.recipeId] ?? -1)) || b.portions - a.portions);
+      if (!cand.length) { dm.push(null); return; }
+      cand[0].portions--; last = cand[0].recipeId; used[last] = tick++; dm.push(recipe(cand[0].recipeId));
+      stock = stock.filter(x => x.portions > 0);
+    });
+    if (i === first && !fresh) addCooked();
+    /* petit-déj et collation : stock « frais » (portions = jours de conservation) */
+    const fpick = {}, toAdd = [], dow = parseISO(k).getDay(), isWE = dow === 0 || dow === 6;
+    for (const [t, kd] of [['petit-dej', 'bf'], ['collation', 'sn']]) {
+      const all = S.recipes.filter(r => r.type === t), si = kinds.indexOf(kd); if (!all.length || si < 0) continue;
+      const hasWE = t === 'petit-dej' && all.some(r => r.we), inScope = r => !hasWE || !!r.we === isWE;   /* recettes « week-end » : samedi et dimanche seulement */
+      const pool = all.filter(inScope).length ? all.filter(inScope) : all;
+      const avail = () => fridge.filter(x => x.portions > 0 && recipe(x.recipeId) && recipe(x.recipeId).type === t && inScope(recipe(x.recipeId)));
+      const e = eaten.find(x => x.slot === slots[si] && recipe(x.recipeId) && recipe(x.recipeId).type === t);
+      let r = null, n = 1, it = null;
+      if (e) { r = recipe(e.recipeId); n = e.portions; }
+      else { it = avail().sort((a, b) => a.portions - b.portions)[0]; if (it) { r = recipe(it.recipeId); n = kd === 'sn' ? snPortions(k, fpick.bf && fpick.bf.r, dm, r, it.portions) : 1; n = Math.min(n, it.portions); it.portions -= n; } }
+      fpick[kd] = { r, n };
+      fridge = fridge.filter(x => x.portions > 0);
+      if (!avail().length) {
+        const pr = i === first ? (S.pending || []).map(recipe).find(x => x && x.type === t && inScope(x)) : null;
+        const c = pr || nextBatch(k, [], cooked, pool); if (c) { cook.push(c.id); toAdd.push(c); }
+      }
+    }
+    /* le vendredi, on prépare le petit-déj du week-end (pancakes) s'il n'y en a plus au congélateur */
+    const weAll = S.recipes.filter(r => r.type === 'petit-dej' && r.we);
+    if (dow === 5 && weAll.length && kinds.indexOf('bf') >= 0 && !fridge.some(x => x.portions > 0 && recipe(x.recipeId) && recipe(x.recipeId).we) && !toAdd.some(r => r.we)) { const c = nextBatch(k, [], cooked, weAll); if (c) { cook.push(c.id); toAdd.push(c); } }
+    /* le dimanche, on prépare le petit-déj de la semaine s'il n'y en a plus */
+    const wdBf = S.recipes.filter(r => r.type === 'petit-dej' && !r.we), isWdBf = x => recipe(x.recipeId) && recipe(x.recipeId).type === 'petit-dej' && !recipe(x.recipeId).we;
+    if (dow === 0 && wdBf.length && kinds.indexOf('bf') >= 0 && !fridge.some(x => x.portions > 0 && isWdBf(x)) && !toAdd.some(r => r.type === 'petit-dej' && !r.we)) { const c = nextBatch(k, [], cooked, wdBf); if (c) { cook.push(c.id); toAdd.push(c); } }
+    /* la veille du jour à emporter : on prépare la salade (une portion) */
+    if (takeAll.length && dow === ((+S.settings.takeDay + 6) % 7) && !fridge.some(x => x.portions > 0 && recipe(x.recipeId) && recipe(x.recipeId).type === 'emporter') && !toAdd.some(r => r.type === 'emporter')) { const c = nextBatch(k, [], cooked, takeAll, false); if (c) { cook.push(c.id); toAdd.push(c); } }
+    /* la veille du 1er dîner végétal : on prépare un lot de 4 portions s'il en reste moins de 2 */
+    if (vegAll.length && (dow === ((Math.min(...vegDays) + 6) % 7) || (!!sd && k === iso(addDays(parseISO(sd), 1)))) && fridge.filter(x => recipe(x.recipeId) && recipe(x.recipeId).type === 'vegetal').reduce((a, x) => a + x.portions, 0) < 2 && !toAdd.some(r => r.type === 'vegetal')) { const c = nextBatch(k, [], cooked, vegAll, false); if (c) { cook.push(c.id); toAdd.push(c); } }
+    toAdd.forEach(r => { fridge.push({ recipeId: r.id, portions: r.portions }); cooked[r.id] = k; });
+    const meals = composeDay(k, dm, fpick.bf && fpick.bf.r, fpick.sn && fpick.sn.r, fpick.sn && fpick.sn.n).map(m => ({ ...m, eaten: eaten.some(e => e.slot === m.slot && e.recipeId === m.recipeId) }));
+    eaten.forEach(e => { if (!meals.some(m => m.slot === e.slot && m.recipeId === e.recipeId)) meals.push({ ...e, eaten: true }); });
+    out.push({ k, cook, meals });
+  }
+  return out;
+}
+function stockCard() {
+  const list = S.stock.map(it => `<div class="meal"><span>${esc(recipe(it.recipeId) ? recipe(it.recipeId).name : '?')}</span><span><button data-act="stockAdj" data-id="${it.recipeId}" data-n="-1">−</button> <b style="display:inline-block;min-width:1.6em;text-align:center">${it.portions}</b> <button data-act="stockAdj" data-id="${it.recipeId}" data-n="1">+</button> <button class="del" data-act="stockDel" data-id="${it.recipeId}" title="Retirer (annule « J'ai cuisiné »)">✕</button></span></div>`).join('');
+  return `<div class="card"><div class="row sp"><b>Dans ton congélateur</b><span class="mut">${S.stock.length} / ${S.settings.stockTarget} recettes</span></div>${list || '<div class="mut">Rien pour le moment.</div>'}</div>`;
+}
+function fridgeCard() {
+  const list = (S.fridge || []).map(it => `<div class="meal"><span>${esc(recipe(it.recipeId) ? recipe(it.recipeId).name : '?')}</span><span><button data-act="stockAdj" data-f="1" data-id="${it.recipeId}" data-n="-1">−</button> <b style="display:inline-block;min-width:1.6em;text-align:center">${it.portions}</b> <button data-act="stockAdj" data-f="1" data-id="${it.recipeId}" data-n="1">+</button> <button class="del" data-act="stockDel" data-f="1" data-id="${it.recipeId}" title="Retirer (annule « J'ai cuisiné »)">✕</button></span></div>`).join('');
+  return `<div class="card"><div class="row sp"><b>Frigo : petits-déj, collations, à emporter, dîners végétaux</b><span class="mut">portions</span></div>${list || '<div class="mut">Rien pour le moment.</div>'}</div>`;
+}
+function eventsCard() {
+  const L = S.settings.levels;
+  const list = [...S.events].sort((a, b) => a.date.localeCompare(b.date)).map(e => `<div class="meal"><span><b>${esc(e.name)}</b> <span class="mut">${parseISO(e.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })} · ${esc(L[e.level] ? L[e.level].label : '')}</span></span><button class="del" data-act="delEvent" data-id="${e.id}">✕</button></div>`).join('');
+  return `<div class="card"><h3 style="margin-top:0">Échéances</h3>${list || '<div class="mut">Aucune échéance.</div>'}
+   <div class="two" style="margin-top:8px"><input id="ev_name" placeholder="Nom (ex. course, compétition)"><input id="ev_date" type="date"></div>
+   <div class="row" style="margin-top:6px"><select id="ev_level" style="flex:1">${Object.entries(L).map(([k, v]) => `<option value="${k}">${esc(v.label)}</option>`).join('')}</select><button class="pri" data-act="addEvent">Ajouter</button></div>
+   <div class="mut" style="margin-top:6px">Les règles de charge et de récupération de chaque niveau se règlent dans les Réglages.</div></div>`;
+}
+function weightCard() {
+  const s = S.settings, W = (S.weights || []).slice().sort((a, b) => a.d.localeCompare(b.d)), last = W[W.length - 1], first = W[0];
+  const kg = x => String(Math.round(x * 10) / 10).replace('.', ',');
+  const weeks = Math.max(1, (parseISO(s.goalDate) - parseISO(iso(today))) / (7 * 864e5));
+  let msg = '';
+  if (last) {
+    const toMax = last.kg - s.goalMax, toMin = last.kg - s.goalMin;
+    msg = toMax <= 0 ? `Objectif atteint : tu es à ${kg(last.kg)} kg.` : `Reste <b>${kg(toMax)} kg</b> pour atteindre ${kg(s.goalMax)} kg (${kg(toMin)} kg pour ${kg(s.goalMin)} kg), soit environ ${kg(toMax / weeks)}–${kg(toMin / weeks)} kg par semaine jusqu'au ${parseISO(s.goalDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}.`;
+    if (first && first !== last) msg += `<br>Déjà ${kg(first.kg - last.kg)} kg depuis le ${parseISO(first.d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}.`;
+  }
+  const list = W.slice(-8).reverse().map(w => `<div class="meal"><span>${parseISO(w.d).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })}</span><b>${kg(w.kg)} kg</b></div>`).join('');
+  return `<div class="card"><h3 style="margin-top:0">Suivi du poids</h3><div>${msg || 'Aucune pesée.'}</div>${list}
+   <div class="row" style="margin-top:8px"><input id="w_kg" type="number" step="0.1" placeholder="Poids du jour (kg)" style="flex:1"><button class="pri" data-act="addWeight">Enregistrer</button></div></div>`;
+}
+function shoppingList(sel) {
+  const map = new Map();
+  for (const [rid, portions] of Object.entries(sel)) {
+    const r = recipe(rid); if (!r || !portions) continue;
+    const f = portions / r.portions;
+    for (const i of r.ings) {
+      let q = i.q * f, u = i.u;
+      if (u === 'kg') { q *= 1000; u = 'g'; } else if (u === 'l') { q *= 1000; u = 'ml'; } else if (u === 'cl') { q *= 10; u = 'ml'; }
+      const key = i.n.toLowerCase().replace(/[sx]$/, '') + '|' + u;
+      const e = map.get(key) || { n: i.n, u, q: 0, a: i.a };
+      e.q += q; map.set(key, e);
+    }
+  }
+  const pantry = S.settings.pantry.map(p => p.toLowerCase());
+  const buy = [], stock = [];
+  for (const e of map.values()) {
+    (pantry.some(p => p && e.n.toLowerCase().includes(p)) ? stock : buy).push(e);
+  }
+  const byAisle = {};
+  for (const e of buy) (byAisle[e.a] = byAisle[e.a] || []).push(e);
+  return { byAisle, stock };
+}
+function listAsText(sel) {
+  const { byAisle } = shoppingList(sel);
+  return Object.entries(byAisle).map(([a, items]) => a + ' :\n' + items.map(e => `- ${fmtQty(Math.ceil(e.q * 10) / 10, e.u)} ${e.n}`.replace('-  ', '- ')).join('\n')).join('\n\n');
+}
+
+/* ============ Rendu : onglets ============ */
+function viewPlan() {
+  const m = ui.month, ws = S.settings.weekStart;
+  const first = new Date(m.getFullYear(), m.getMonth(), 1);
+  const offset = (first.getDay() - ws + 7) % 7;
+  const start = addDays(first, -offset);
+  const names = ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'];
+  let head = ''; for (let i = 0; i < 7; i++) head += `<div class="dow">${names[(ws + i) % 7]}</div>`;
+  let cells = '', n = 0, sumP = 0, planned = 0, protOk = 0;
+  for (let i = 0; i < 42; i++) {
+    const d = addDays(start, i), k = iso(d), inMonth = d.getMonth() === m.getMonth();
+    if (i >= 35 && d.getMonth() !== m.getMonth()) break;
+    const t = dayTotals(k), has = hasMeals(k);
+    if (inMonth && has) { planned++; sumP += t.prot; if (protClass(t.prot, k) === 'ok') protOk++; }
+    cells += `<button class="cell ${inMonth ? '' : 'out'} ${k === iso(today) ? 'today' : ''} ${has ? protClass(t.prot, k) : ''}" data-act="day" data-d="${k}">
+      <span><b>${d.getDate()}</b><span class="ic">${dayData(k).train ? '🏃' : ''}${phaseFor(k) ? ICON[phaseFor(k).type] : ''}${(dayData(k).cook || []).length ? '🍳' : ''}</span></span>${has ? `<span class="pg">${Math.round(t.prot)} g</span>` : ''}</button>`;
+  }
+  const label = m.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+  return `<h1>Planning${S.settings.name ? ' de ' + esc(S.settings.name) : ''}</h1>
+  <div class="row sp"><button data-act="prevM">‹</button><b style="text-transform:capitalize">${label}</b><button data-act="nextM">›</button></div>
+  <div class="grid7" style="margin-top:8px">${head}${cells}</div>
+  <div class="card" style="margin-top:12px"><h3 style="margin-top:0">Bilan du mois</h3>
+   <div>${planned} jour(s) planifié(s) · protéines moyennes : <b>${planned ? Math.round(sumP / planned) : '–'} g</b> (objectif ${S.settings.protMin}–${S.settings.protMax} g)</div>
+   <div class="mut">${protOk} jour(s) dans la cible. Vert = dans la cible, orange = en dessous, rouge = au-dessus.${PROFILE === 'homme' ? '<br>🍝 charge · 🔥 charge finale · 🏁 jour J · 💤 récupération' : ''}</div></div>
+  ${PROFILE === 'homme' ? eventsCard() : weightCard()}`;
+}
+
+const CATS = [['plat', 'Plats'], ['petit-dej', 'Petits-déj'], ['collation', 'Collations'], ['emporter', 'À emporter'], ['vegetal', 'Dîners végétaux']];
+const catOf = t => (t === 'energie' || t === 'boisson') ? 'collation' : (t || 'plat');
+const TYPE_LABEL = { plat: 'Plat', 'petit-dej': 'Petit-déj', collation: 'Collation', emporter: 'À emporter · se mange froid', vegetal: 'Dîner végétal', energie: 'Collation · effort', boisson: 'Collation · boisson d\'effort' };
+function viewRecipes() {
+  const eqs = S.settings.equipment;
+  const inCat = S.recipes.filter(r => catOf(r.type) === ui.cat);
+  const list = inCat.filter(r => (ui.eqFilter.length === 0 || ui.eqFilter.every(e => r.eq.includes(e))) && (!ui.quick || r.prep <= S.settings.maxPrep));
+  return `<div class="row sp"><h1>Recettes</h1><button class="pri" data-act="newRecipe">+ Nouvelle</button></div>
+  <div style="margin-bottom:6px">${CATS.map(([c, l]) => `<span class="chip btn ${ui.cat === c ? 'on' : ''}" style="font-size:.95rem;padding:5px 16px" data-act="cat" data-c="${c}">${l} · ${S.recipes.filter(r => catOf(r.type) === c).length}</span>`).join('')}</div>
+  <div>${eqs.map(e => `<span class="chip btn ${ui.eqFilter.includes(e) ? 'on' : ''}" data-act="eqf" data-e="${esc(e)}">${esc(e)}</span>`).join('')}
+  <span class="chip btn ${ui.quick ? 'on' : ''}" data-act="quick">≤ ${S.settings.maxPrep} min</span></div>
+  ${list.map(r => `<div class="card"><div class="row sp"><button class="lnk" data-act="recipe" data-id="${r.id}"><b>${esc(r.name)}</b></button>
+   <button data-act="editRecipe" data-id="${r.id}">Modifier</button></div>
+   <div class="mut">${['energie', 'boisson', 'emporter', 'vegetal'].includes(r.type) ? TYPE_LABEL[r.type] + ' · ' : ''}${r.prep} min · ${r.portions} portions · ${r.kcal} kcal · <b>${r.prot} g prot</b> · ${r.carbs || 0} g glucides / portion · se garde ${r.keep} j</div>
+   ${dietFlags(r).length ? `<div style="color:var(--red);font-weight:700;font-size:.85rem">⚠️ À vérifier : ${dietFlags(r).join(', ')}</div>` : ''}
+   ${r.we ? `<div class="mut">🗓️ Petit-déjeuner du week-end (samedi et dimanche)</div>` : ''}
+   ${r.fec ? `<div class="mut">🍚 Charge : +${r.fec.load} g de ${esc(r.fec.n)} cru · +${r.fec.peak} g (J-2/J-1) · +${r.fec.race} g (jour J)</div>` : ''}
+   <div>${r.eq.map(e => `<span class="chip">${esc(e)}</span>`).join('')}</div></div>`).join('') || `<p class="mut">Aucune recette dans cette catégorie${ui.eqFilter.length || ui.quick ? ' avec ces filtres' : ''}.</p>`}`;
+}
+
+function nextCooks() {
+  const out = [], seen = {};
+  for (const p of getProj()) for (const id of p.cook) {
+    const r = recipe(id); if (!r) continue;
+    if (r.type === 'plat') { if (out.filter(x => recipe(x.id).type === 'plat').length < S.settings.shopCount) out.push({ id, k: p.k }); }
+    else if (!seen[r.type]) { seen[r.type] = 1; out.push({ id, k: p.k }); }
+  }
+  return out;
+}
+function viewBatch() {
+  const next = nextCooks(), sel = {};
+  next.forEach(n => { sel[n.id] = (sel[n.id] || 0) + portionsOf(recipe(n.id)); });
+  ui.sel = sel;
+  const { byAisle, stock } = shoppingList(sel);
+  const when = k => k === iso(today) ? "à cuisiner aujourd'hui" : 'à cuisiner le ' + parseISO(k).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+  const list = Object.entries(byAisle).map(([a, items]) => `<h3>${esc(a)}</h3>` + items.map(e => {
+    const key = e.n + '|' + e.u;
+    return `<label class="chk ${ui.ticked[key] ? 'done' : ''}" style="margin:0;color:inherit;font-size:1rem"><input type="checkbox" data-tick="${esc(key)}" ${ui.ticked[key] ? 'checked' : ''}><span>${fmtQty(Math.ceil(e.q * 10) / 10, e.u)} ${esc(e.n)}</span></label>`;
+  }).join('')).join('');
+  return `<h1>Courses</h1>
+  <div class="card"><b>Les prochaines recettes à cuisiner</b>
+   ${next.map(n => `<div class="meal"><button class="lnk" data-act="recipeBatch" data-id="${n.id}">${esc(recipe(n.id) ? recipe(n.id).name : '?')}</button><span class="mut">${when(n.k)}</span></div>`).join('') || '<div class="mut">Aucune recette à prévoir.</div>'}
+   <div class="mut" style="margin-top:6px">La liste couvre les ${S.settings.shopCount} prochains plats (${S.settings.batchPortions} portions chacun, même s'il t'en reste au congélateur), plus le prochain petit-déj et la prochaine collation.</div></div>
+  ${next.length ? `<div class="card"><div class="row sp"><h2 style="margin:0">Liste (${esc(S.settings.store)})</h2><button data-act="copyList">Copier</button></div>${list}
+   ${stock.length ? `<h3>Probablement déjà en stock</h3><div class="mut">${stock.map(e => esc(e.n) + ' (' + fmtQty(Math.ceil(e.q * 10) / 10, e.u) + ')').join(' · ')}</div>` : ''}</div>` : ''}`;
+}
+function levelCard(key) {
+  const L = S.settings.levels[key];
+  return `<div class="card"><h3 style="margin-top:0">Échéance : ${esc(L.label)}</h3><label>Nom du niveau</label><input data-lvlname="${key}" value="${esc(L.label)}">
+   <div class="two">${LEVEL_FIELDS.map(([f, lbl, st]) => `<div><label>${lbl}</label><input type="number" step="${st}" data-lvl="${key}.${f}" value="${L[f]}"></div>`).join('')}</div></div>`;
+}
+function viewSettings() {
+  const s = S.settings;
+  const num = (k, lbl, step = 1) => `<div><label>${lbl}</label><input type="number" step="${step}" data-set="${k}" value="${s[k]}"></div>`;
+  const lst = (k, lbl) => `<label>${lbl} (séparés par des virgules)</label><input data-setlist="${k}" value="${esc(s[k].join(', '))}">`;
+  return `<h1>Paramètres</h1>
+  <div class="card"><label>Prénom</label><input data-set="name" value="${esc(s.name)}">
+   <h3>Nutrition</h3><div class="two">${num('protMin', 'Protéines min (g/jour)')}${num('protMax', 'Protéines max (g/jour)')}${num('protTol', 'Marge de tolérance (g)')}${num('kcal', 'Énergie cible (kcal/jour)', 50)}${num('trainBonus', 'Bonus jour d\'entraînement (kcal)', 50)}${num('weight', 'Poids (kg)', 0.5)}${num('carbsGkg', 'Glucides hors échéance (g/kg/jour, 0 = pas d\'objectif)', 0.5)}${PROFILE === 'femme' ? num('goalMin', 'Poids objectif mini (kg)', 0.5) + num('goalMax', 'Poids objectif maxi (kg)', 0.5) + `<div><label>Date objectif</label><input type="date" data-set="goalDate" value="${esc(s.goalDate)}"></div>` : ''}</div>
+   <div class="mut" style="margin-top:6px">${PROFILE === 'femme' ? 'Plafond calorique pensé pour une perte de poids (1 400–1 450 kcal/jour). À valider avec ton médecin ou ta diététicienne, et à ajuster si besoin.' : 'Valeurs de départ pour un homme de 57 ans très actif : à ajuster selon ton poids, ton volume d\'entraînement et ton suivi sportif.'}</div></div>
+  ${PROFILE === 'homme' ? levelCard('big') + levelCard('small') : ''}
+  <div class="card"><h3 style="margin-top:0">Cuisine & batch</h3>
+   ${lst('equipment', 'Matériel disponible')}${lst('slots', 'Repas de la journée')}${lst('pantry', 'Déjà en stock (exclu de la liste de courses)')}
+   <div class="two">${num('stockTarget', 'Recettes en stock en permanence')}${num('shopCount', 'Recettes par session de courses')}${num('batchPortions', 'Portions par batch cuisiné')}${num('maxPrep', 'Temps de préparation max (min)')}</div>
+   <label>Enseigne pour les courses</label><input data-set="store" value="${esc(s.store)}">
+   <label>Jour du repas à emporter (déjeuner froid, préparé la veille)</label><select data-set="takeDay">${[1, 2, 3, 4, 5, 6, 0].map(d => `<option value="${d}" ${s.takeDay == d ? 'selected' : ''}>${['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'][d]}</option>`).join('')}</select>
+   ${[['vegDay1', '1er dîner végétal de la semaine'], ['vegDay2', '2e dîner végétal de la semaine']].map(([key, lab]) => `<label>${lab}</label><select data-set="${key}">${[1, 2, 3, 4, 5, 6, 0].map(d => `<option value="${d}" ${s[key] == d ? 'selected' : ''}>${['Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi'][d]}</option>`).join('')}</select>`).join('')}
+   <label>Début du planning (tout est à cuisiner ce jour-là)</label><input type="date" data-set="startDate" value="${esc(s.startDate || '')}">
+   <label>Premier jour de la semaine</label><select data-set="weekStart"><option value="1" ${s.weekStart == 1 ? 'selected' : ''}>Lundi</option><option value="0" ${s.weekStart == 0 ? 'selected' : ''}>Dimanche</option></select></div>
+  <div class="card"><h3 style="margin-top:0">Données</h3>
+   <div class="row"><button data-act="export">Exporter (sauvegarde)</button><button data-act="import">Importer</button><input type="file" id="imp" accept="application/json" hidden></div>
+   <div class="row" style="margin-top:8px"><button data-act="resetRecipes">Remettre les recettes d'exemple</button><button class="del" data-act="wipe">Tout effacer</button></div>
+   <div class="mut" style="margin-top:6px">Pour l'instant les données restent sur cet appareil. La synchronisation entre appareils est l'étape suivante ; l'export permet de transférer manuellement.</div></div>`;
+}
+
+/* ============ Rendu : fenêtres ============ */
+function dayBody(k) {
+  const dd = dayData(k), t = dayTotals(k), target = dayTarget(k);
+  const pr = protRange(k), ph = phaseFor(k), ct = carbsTarget(k), isToday = k === iso(today), edit = k <= iso(today), past = k < iso(today);
+  const pct = Math.min(100, t.prot / pr.max * 100);
+  const cook = (dd.cook || []).length ? `<div class="card" style="margin-top:10px;border-color:var(--brand)"><b>🍳 ${past ? 'Prévu à cuisiner ce jour-là' : 'À cuisiner ' + (isToday ? "aujourd'hui" : 'ce jour-là')}</b>
+    ${dd.cook.map(id => { const r = recipe(id); return r ? `<div class="meal"><div><button class="lnk" data-act="recipeBatch" data-id="${id}">${esc(r.name)}</button><div class="mut">${portionsOf(r)} portions${r.type !== 'plat' && r.keep < 30 ? ' · se garde ' + r.keep + ' j' : ''}</div></div>${edit ? (past && S.cooked[id] === k ? '<span class="mut">✓ cuisiné</span>' : `<button class="pri" data-act="cook" data-id="${id}" data-d="${k}">J'ai cuisiné</button>`) : `<span class="mut">${r.prep} min</span>`}</div>` : ''; }).join('')}</div>` : '';
+  const slots = S.settings.slots.map((sl, si) => {
+    const meals = dd.meals.filter(m => m.slot === sl);
+    if (!meals.length) { const kt = { main: 'plat', bf: 'petit-dej', sn: 'collation' }[slotKind(sl)]; return isToday && (dd.cook || []).some(id => recipe(id) && recipe(id).type === kt) ? `<div class="card c${si % 4}"><b>${esc(sl)}</b><div class="mut" style="margin-top:4px">Pas encore prêt : cuisine d'abord la recette ci-dessus.</div></div>` : ''; }
+    return `<div class="card c${si % 4}"><b>${esc(sl)}</b>${meals.map(m => { const r = recipe(m.recipeId);
+      return `<div class="meal"><div><button class="lnk" data-act="recipeFromDay" data-id="${m.recipeId}">${esc(r ? r.name : '(supprimée)')}${m.portions !== 1 ? ' ×' + m.portions : ''}</button>${ph && r && r.fec && r.fec[ph.type] ? `<div class="mut">🍚 + ${r.fec[ph.type]} g de ${esc(r.fec.n)} cru</div>` : ''}</div>
+       <span><span class="mut">${r ? Math.round(r.prot * m.portions) + ' g' : ''}</span> ${edit ? `<button class="${m.eaten ? 'pri' : ''}" data-act="eat" data-d="${k}" data-slot="${esc(m.slot)}" data-id="${m.recipeId}" data-p="${m.portions}">${m.eaten ? '✓' : '○'}</button>` : (m.eaten ? '✓' : '')}</span></div>`; }).join('')}</div>`;
+  }).join('');
+  return `${phaseBanner(ph)}${fecDay(k, ph, dd, t, ct)}${cook}${slots}<div class="card"><div class="row sp"><span><b>${Math.round(t.prot)} g</b> de protéines <span class="mut">(objectif ${pr.min}–${pr.max})</span></span><span class="mut">≈ <b>${Math.round(t.kcal)}</b> kcal (repère ${target})</span></div>
+   <div class="mut" style="margin-top:4px">Glucides : <b>${Math.round(t.carbs)} g</b>${ct ? ' / ' + Math.round(ct) + ' g' : ''}</div>
+   <div class="bar" style="margin-top:6px"><i style="width:${pct}%;${protClass(t.prot, k) === 'low' ? 'background:var(--warn)' : ''}"></i></div>
+   ${S.settings.trainBonus ? `<label style="display:flex;gap:8px;align-items:center;margin-top:8px;color:inherit"><input type="checkbox" data-train="${k}" ${dd.train ? 'checked' : ''}> Jour d'entraînement (+${S.settings.trainBonus} kcal)</label>` : ''}</div>`;
+}
+function dayView(k) {
+  const d = parseISO(k);
+  return `<div class="row sp"><h2 style="margin:0;text-transform:capitalize">${d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</h2><button data-act="back">Fermer</button></div>${dayBody(k)}`;
+}
+function viewToday() {
+  const off = ui.off, k = iso(addDays(today, off)), d = parseISO(k);
+  const rel = off === 0 ? "Aujourd'hui" : off === 1 ? 'Demain' : off === -1 ? 'Hier' : off > 0 ? 'Dans ' + off + ' jours' : 'Il y a ' + (-off) + ' jours';
+  const arrow = (n, c, dis) => `<button data-act="dayNav" data-n="${n}" ${dis ? 'disabled' : ''} style="width:46px;height:46px;padding:0;font-size:1.4rem;border-radius:50%;flex:none${dis ? ';opacity:.3' : ''}">${c}</button>`;
+  const sdd = S.settings.startDate, pre = sdd && k < sdd;
+  const note = pre ? `<div class="card c0"><b>🗓️ Le planning démarre le ${parseISO(sdd).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</b><div class="mut" style="margin-top:4px">Ce week-end-là, toutes les recettes sont à cuisiner à zéro : plats en lot, dîners végétaux, petits-déjeuners et collations. Rien à faire avant.</div></div>` : off > 0 ? `<div class="mut" style="margin-bottom:8px">Prévision : suppose que tu as tout cuisiné et tout mangé avant ce jour.</div>` : off < 0 ? `<div class="mut" style="margin-bottom:8px">Tu as oublié de cocher quelque chose ? Fais-le ici, tout se met à jour.</div>` : '';
+  return `<div class="row sp" style="align-items:center;gap:6px">${arrow(-1, '‹', off <= -7)}<div style="text-align:center;flex:1"><div class="mut">${rel}</div><h1 style="font-size:1.6rem;text-transform:capitalize;margin:0">${d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })}</h1>${off !== 0 ? `<span class="chip btn" style="margin:6px 0 0" data-act="dayNav" data-n="0">Retour à aujourd'hui</span>` : ''}</div>${arrow(1, '›', off >= 13)}</div>
+  <div style="margin-top:16px">${off === 0 ? stockCard() + fridgeCard() : ''}${note}</div>${dayBody(k)}`;
+}
+
+function recipeView(id, p) {
+  const r = recipe(id); if (!r) return '<p>Recette introuvable.</p><button data-act="back">Fermer</button>';
+  const portions = p || r.portions, f = portions / r.portions;
+  return `<div class="row sp"><h2 style="margin:0">${esc(r.name)}</h2><button data-act="back">Fermer</button></div>
+  <div class="mut" style="margin-top:4px">${r.prep} min · ${r.kcal} kcal, <b>${r.prot} g de protéines</b> et ${r.carbs || 0} g de glucides par portion · se garde ${r.keep} jours</div>
+  ${dietFlags(r).length ? `<div class="card" style="background:var(--red-l)"><b>⚠️ À vérifier pour ce profil :</b> ${dietFlags(r).join(', ')}</div>` : ''}
+  <div>${r.eq.map(e => `<span class="chip">${esc(e)}</span>`).join('')}</div>
+  ${fecCard(r)}
+  <div class="card" style="margin-top:8px"><div class="row sp"><h3 style="margin:0">Ingrédients</h3><span>pour <input type="number" min="1" step="any" data-rvp="1" value="${portions}" style="width:70px;display:inline-block"> portions</span></div>
+   <ul>${r.ings.map(i => `<li>${esc(fmtQty(i.q * f, i.u))} ${esc(i.n)}</li>`.replace('<li> ', '<li>')).join('')}</ul></div>
+  <div class="card"><h3 style="margin-top:0">Préparation</h3><ol>${r.steps.map(s => `<li>${esc(s)}</li>`).join('')}</ol></div>`;
+}
+
+function recipeForm(id) {
+  const r = id ? recipe(id) : { id: '', name: '', portions: S.settings.batchPortions, prep: 20, eq: [], type: ui.cat, kcal: 500, prot: 35, carbs: 50, keep: 4, ings: [], steps: [] };
+  return `<div class="row sp"><h2 style="margin:0">${id ? 'Modifier' : 'Nouvelle'} recette</h2><button data-act="back">Annuler</button></div>
+  <label>Nom</label><input id="f_name" value="${esc(r.name)}">
+  <label>Catégorie</label><select id="f_type"><option value="plat" ${r.type === 'plat' ? 'selected' : ''}>Plat (déjeuner / dîner)</option><option value="petit-dej" ${r.type === 'petit-dej' ? 'selected' : ''}>Petit-déjeuner</option><option value="emporter" ${r.type === 'emporter' ? 'selected' : ''}>À emporter (déjeuner froid)</option><option value="vegetal" ${r.type === 'vegetal' ? 'selected' : ''}>Dîner végétal (protéines végétales)</option><optgroup label="Collation"><option value="collation" ${r.type === 'collation' ? 'selected' : ''}>Collation</option><option value="energie" ${r.type === 'energie' ? 'selected' : ''}>Complément énergétique (effort)</option><option value="boisson" ${r.type === 'boisson' ? 'selected' : ''}>Boisson d'effort</option></optgroup></select>
+  <div class="two"><div><label>Portions</label><input id="f_portions" type="number" min="1" value="${r.portions}"></div><div><label>Préparation (min)</label><input id="f_prep" type="number" value="${r.prep}"></div>
+  <div><label>kcal / portion</label><input id="f_kcal" type="number" value="${r.kcal}"></div><div><label>Protéines (g) / portion</label><input id="f_prot" type="number" step="0.5" value="${r.prot}"></div>
+  <div><label>Glucides (g) / portion</label><input id="f_carbs" type="number" value="${r.carbs || 0}"></div>
+  <div><label>Conservation (jours)</label><input id="f_keep" type="number" value="${r.keep}"></div></div>
+  <label>Matériel</label><div>${S.settings.equipment.map(e => `<label style="display:inline-flex;gap:4px;margin-right:10px;color:inherit"><input type="checkbox" class="f_eq" value="${esc(e)}" ${r.eq.includes(e) ? 'checked' : ''}>${esc(e)}</label>`).join('')}</div>
+  <label>Ingrédients pour la recette complète — un par ligne : « 200 g poulet | Rayon »</label><textarea id="f_ings">${esc(r.ings.map(ingLine).join('\n'))}</textarea>
+  <label>Étapes (une par ligne)</label><textarea id="f_steps">${esc(r.steps.join('\n'))}</textarea>
+  <div class="row" style="margin-top:12px"><button class="pri" data-act="saveRecipe" data-id="${id || ''}">Enregistrer</button>${id ? `<button class="del" data-act="delRecipe" data-id="${id}">Supprimer</button>` : ''}</div>
+  <div class="mut" style="margin-top:6px">Les valeurs nutritionnelles sont des estimations à vérifier.</div>`;
+}
+
+/* ============ Charge glucidique : féculent à ajouter ============ */
+const fecTxt = (r, ty) => { const g = r && r.fec && r.fec[ty]; return g ? `${g} g de ${r.fec.n} cru (≈ ${Math.round(g * r.fec.cook / 10) * 10} g cuit, +${Math.round(g * r.fec.c)} g de glucides, +${Math.round(g * r.fec.k)} kcal)` : ''; };
+function fecCard(r) {
+  if (!r || !r.fec) return '';
+  const ev = (S.events || []).filter(e => e.date >= iso(today)).sort((x, y) => x.date.localeCompare(y.date))[0], L = ev && S.settings.levels[ev.level];
+  const dt = n => parseISO(ev.date).setDate(parseISO(ev.date).getDate() - n), fd = n => new Date(dt(n)).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+  const rng = (a, b) => ev && L ? ` (${a === b ? fd(a) : fd(a) + ' → ' + fd(b)})` : '';
+  const lp = L ? L.loadDays : 14, pk = L ? L.peakDays : 2;
+  return `<div class="card c0"><b>🍚 Féculent à ajouter${ev ? ' · charge ' + esc(ev.name) : ''}</b><div class="mut">1 portion de Manu = 1,5 portion de Celine (mêmes ingrédients). Féculent à ajouter par portion, en plus de la recette :</div>
+   <ul><li><b>Tous les jours</b> : ${fecTxt(r, 'base')}</li><li><b>Charge</b> J-${lp} à J-${pk + 1}${rng(lp, pk + 1)} : ${fecTxt(r, 'load')}</li><li><b>Charge finale</b> J-${pk} à J-1${rng(pk, 1)} : ${fecTxt(r, 'peak')}</li><li><b>Jour J</b>${rng(0, 0)} : ${fecTxt(r, 'race')}</li></ul></div>`;
+}
+function fecDay(k, ph, dd, t, ct) {
+  const ty = ph && ['load', 'peak', 'race'].includes(ph.type) ? ph.type : 'base';
+  const ms = dd.meals.filter(m => { const r = recipe(m.recipeId); return r && (r.type === 'plat' || r.type === 'emporter' || r.type === 'vegetal') && r.fec && r.fec[ty]; }); if (!ms.length) return '';
+  const add = ms.reduce((x, m) => x + recipe(m.recipeId).fec[ty] * recipe(m.recipeId).fec.c * m.portions, 0), kc = ms.reduce((x, m) => x + recipe(m.recipeId).fec[ty] * recipe(m.recipeId).fec.k * m.portions, 0);
+  const total = t.carbs + add, rest = ct ? ct - total : 0, he2 = recipe('he2'), he3 = recipe('he3');
+  const tip = rest > 20 ? ` Il reste environ <b>${Math.round(rest)} g</b> à trouver : 2ᵉ collation${he2 ? ', boisson jus de raisin (' + he2.carbs + ' g)' : ''}${he3 ? ', tartines pain-miel-banane (' + he3.carbs + ' g)' : ''}.` : ct ? ' Objectif atteint ✓' : '';
+  return `<div class="card" style="margin-top:10px;border-color:var(--brand)"><b>🍚 Féculent à ajouter aujourd'hui</b>${ms.map(m => `<div class="meal"><span>${esc(m.slot)}</span><span>${fecTxt(recipe(m.recipeId), ty).split(' (')[0]}</span></div>`).join('')}
+   <div class="mut" style="margin-top:6px">Glucides : ${Math.round(t.carbs)} g prévus + ${Math.round(add)} g de féculent = <b>${Math.round(total)} g</b>${ct ? ' pour un objectif de ' + Math.round(ct) + ' g.' : '.'}${tip}<br>Énergie : ≈ ${Math.round(t.kcal + kc)} kcal avec le féculent (repère ${dayTarget(k)}).</div></div>`;
+}
+/* ============ Profils ============ */
+const PROFILE_LABEL = { femme: '👩 Celine · 53 ans', homme: '👨 Manu · 57 ans' };
+function profileBar() {
+  const chips = Object.keys(PROFILE_LABEL).map(p => `<span class="chip btn ${PROFILE === p ? 'on' : ''}" style="font-size:.95rem;padding:5px 16px" data-act="profile" data-p="${p}">${PROFILE_LABEL[p]}</span>`).join('');
+  const kg = x => String(x).replace('.', ',');
+  const ev = (S.events || []).filter(e => e.date >= iso(today)).sort((x, y) => x.date.localeCompare(y.date))[0];
+  const sub = PROFILE === 'femme' ? `Départ ${kg(S.settings.weight)} kg · objectif ${kg(S.settings.goalMin)}–${kg(S.settings.goalMax)} kg fin janvier · ${S.settings.kcal - 25}–${S.settings.kcal + 25} kcal/jour · environ 50 g de glucides/jour · sans œuf, sans gluten, sans protéines de lait`
+    : `${ev ? esc(ev.name) + ' dans ' + Math.round((parseISO(ev.date) - parseISO(iso(today))) / 864e5) + ' jours · ' : ''}environ ${S.settings.kcal} kcal/jour (+${S.settings.trainBonus} les jours d'entraînement) · œufs et jambon au petit-déjeuner`;
+  return `<div style="margin:-4px 0 12px">${chips}<div class="mut" style="margin-top:4px">${sub}</div></div>`;
+}
+/* ============ Rendu global ============ */
+function render() {
+  const views = { today: viewToday, plan: viewPlan, recipes: viewRecipes, batch: viewBatch, settings: viewSettings };
+  const tabs = [['today', '🏠', 'Today'], ['plan', '📅', 'Planning'], ['recipes', '🍲', 'Recettes'], ['batch', '🛒', 'Courses'], ['settings', '⚙️', 'Réglages']];
+  $('#app').innerHTML = '<div class="deco"><i></i><i></i><i></i></div>' + profileBar() + views[ui.tab]() + `<nav class="tabs"><div>${tabs.map(([k, ic, l]) => `<button class="${ui.tab === k ? 'on' : ''}" data-act="tab" data-t="${k}"><span>${ic}</span>${l}</button>`).join('')}</div></nav>`;
+  renderModal();
+}
+function renderModal(keep) {
+  const top = ui.modals[ui.modals.length - 1];
+  const old = document.querySelector('.sheet'), st = keep && old ? old.scrollTop : 0;
+  const f = document.activeElement, refocus = keep && f && f.dataset && f.dataset.rvp;
+  $('#modal').innerHTML = top ? `<div class="ov"><div class="sheet">${top()}</div></div>` : '';
+  document.body.style.overflow = top ? 'hidden' : '';   // le fond ne défile plus derrière la fiche
+  const sh = document.querySelector('.sheet'); if (sh && st) sh.scrollTop = st;
+  if (refocus) { const i = document.querySelector('[data-rvp]'); if (i) { i.focus(); try { i.setSelectionRange(i.value.length, i.value.length); } catch (e) {} } }
+}
+const push = fn => { ui.modals.push(fn); renderModal(); };
+const pop = () => { ui.modals.pop(); ui.rvP = null; render(); };
+
+/* ============ Actions ============ */
+const A = {
+  tab: t => { ui.tab = t.dataset.t; render(); window.scrollTo(0, 0); },
+  prevM: () => { ui.month = new Date(ui.month.getFullYear(), ui.month.getMonth() - 1, 1); render(); },
+  nextM: () => { ui.month = new Date(ui.month.getFullYear(), ui.month.getMonth() + 1, 1); render(); },
+  day: t => { const k = t.dataset.d; push(() => dayView(k)); },
+  back: () => pop(),
+  eqf: t => { const e = t.dataset.e, i = ui.eqFilter.indexOf(e); i >= 0 ? ui.eqFilter.splice(i, 1) : ui.eqFilter.push(e); render(); },
+  cat: t => { ui.cat = t.dataset.c; render(); },
+  stockDel: t => {
+    const id = t.dataset.id, f = t.dataset.f === '1';
+    if (f) S.fridge = (S.fridge || []).filter(x => x.recipeId !== id); else S.stock = S.stock.filter(x => x.recipeId !== id);
+    if (S.cookedPrev && id in S.cookedPrev) { if (S.cookedPrev[id]) S.cooked[id] = S.cookedPrev[id]; else delete S.cooked[id]; delete S.cookedPrev[id]; }
+    save(); render();
+  },
+  dayNav: t => { const n = +t.dataset.n; ui.off = n === 0 ? 0 : Math.max(-7, Math.min(13, ui.off + n)); render(); window.scrollTo(0, 0); },
+  quick: () => { ui.quick = !ui.quick; render(); },
+  recipe: t => { const id = t.dataset.id; ui.rvP = null; push(() => recipeView(id, ui.rvP)); },
+  recipeFromDay: t => { const id = t.dataset.id; ui.rvP = null; push(() => recipeView(id, ui.rvP)); },
+  eat: t => {
+    const { d, slot, id } = t.dataset, p = +t.dataset.p, arr = S.eaten[d] = S.eaten[d] || [];
+    const i = arr.findIndex(e => e.slot === slot && e.recipeId === id), r = recipe(id), fr = r && r.type !== 'plat';
+    S.fridge = S.fridge || [];
+    const it = (fr ? S.fridge : S.stock).find(x => x.recipeId === id), put = v => { if (fr) S.fridge = v; else S.stock = v; };
+    if (i >= 0) { const q = arr[i].portions || 1; arr.splice(i, 1); if (r && (r.type === 'plat' || fr)) { if (it) it.portions += q; else (fr ? S.fridge : S.stock).push({ recipeId: id, portions: q }); } }
+    else { arr.push({ slot, recipeId: id, portions: p }); if (it) { it.portions -= p; if (it.portions <= 0) put((fr ? S.fridge : S.stock).filter(x => x !== it)); } }
+    save(); render();
+  },
+  cook: t => {
+    const id = t.dataset.id, r = recipe(id), q = r ? portionsOf(r) : S.settings.batchPortions;
+    S.fridge = S.fridge || []; const list = r && r.type !== 'plat' ? S.fridge : S.stock, it = list.find(x => x.recipeId === id);
+    if (it) it.portions += q; else list.push({ recipeId: id, portions: q });
+    const cd = t.dataset.d || iso(today); S.cookedPrev = S.cookedPrev || {}; if (!(id in S.cookedPrev)) S.cookedPrev[id] = S.cooked[id] || ''; S.cooked[id] = cd; S.lastCook = cd; save(); render();
+  },
+  stockAdj: t => {
+    const f = t.dataset.f === '1', list = f ? (S.fridge = S.fridge || []) : S.stock, it = list.find(x => x.recipeId === t.dataset.id); if (!it) return;
+    it.portions += +t.dataset.n; if (it.portions <= 0) { const nl = list.filter(x => x !== it); if (f) S.fridge = nl; else S.stock = nl; } save(); render();
+  },
+  profile: t => { const p = t.dataset.p; if (p === PROFILE) return; save(); try { localStorage.setItem(PROFILE_KEY, p); } catch (e) {} location.reload(); },
+  recipeBatch: t => { const id = t.dataset.id; ui.rvP = recipe(id) ? portionsOf(recipe(id)) : S.settings.batchPortions; push(() => recipeView(id, ui.rvP)); },
+  addWeight: () => {
+    const v = parseFloat(String(document.getElementById('w_kg').value).replace(',', '.')); if (!v || v < 30 || v > 250) return;
+    S.weights = (S.weights || []).filter(w => w.d !== iso(today)); S.weights.push({ d: iso(today), kg: v }); S.settings.weight = v; save(); render();
+  },
+  addEvent: () => {
+    const name = document.getElementById('ev_name').value.trim(), date = document.getElementById('ev_date').value;
+    if (!name || !date) { alert('Indique un nom et une date.'); return; }
+    S.events.push({ id: uid(), name, date, level: document.getElementById('ev_level').value }); regen(true); render();
+  },
+  delEvent: t => { S.events = S.events.filter(e => e.id !== t.dataset.id); regen(true); render(); },
+  newRecipe: () => push(() => recipeForm(null)),
+  editRecipe: t => { const id = t.dataset.id; push(() => recipeForm(id)); },
+  saveRecipe: t => {
+    const g = id => document.getElementById(id).value;
+    const name = g('f_name').trim(); if (!name) { alert('Donne un nom à la recette.'); return; }
+    const r = {
+      id: t.dataset.id || uid(), name, type: g('f_type'), seedV: (recipe(t.dataset.id) || {}).seedV, fec: (recipe(t.dataset.id) || {}).fec, we: (recipe(t.dataset.id) || {}).we, portions: Math.max(1, +g('f_portions') || 1), prep: +g('f_prep') || 0,
+      kcal: +g('f_kcal') || 0, prot: +g('f_prot') || 0, carbs: +g('f_carbs') || 0, keep: +g('f_keep') || 0,
+      eq: [...document.querySelectorAll('.f_eq:checked')].map(c => c.value),
+      ings: g('f_ings').split('\n').map(s => s.trim()).filter(Boolean).map(parseIng),
+      steps: g('f_steps').split('\n').map(s => s.trim()).filter(Boolean)
+    };
+    const i = S.recipes.findIndex(x => x.id === r.id);
+    i >= 0 ? S.recipes[i] = r : S.recipes.push(r);
+    regen(true); pop();
+  },
+  delRecipe: t => { if (!confirm('Supprimer cette recette ?')) return; S.recipes = S.recipes.filter(r => r.id !== t.dataset.id); regen(true); pop(); },
+  addMeal: t => {
+    const box = t.closest('.add'), id = box.querySelector('.sel').value; if (!id) return;
+    const k = box.dataset.d, p = Math.max(0.25, +box.querySelector('.qty').value || 1);
+    const dd = S.plan[k] = S.plan[k] || { meals: [], train: false };
+    dd.meals.push({ slot: box.dataset.slot, recipeId: id, portions: p }); save(); renderModal(); render();
+  },
+  copyList: async () => { try { await navigator.clipboard.writeText(listAsText(ui.sel)); alert('Liste copiée.'); } catch (e) { prompt('Copie la liste :', listAsText(ui.sel)); } },
+  export: () => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' }));
+    a.download = 'mes-repas-' + iso(today) + '.json'; a.click();
+  },
+  import: () => document.getElementById('imp').click(),
+  resetRecipes: () => { if (confirm('Remplacer toutes tes recettes par les exemples ?')) { S.recipes = seedRecipes(); save(); render(); } },
+  wipe: () => { if (confirm('Tout effacer (planning, recettes, réglages) ?')) { S = fresh(); save(); render(); } }
+};
+document.addEventListener('click', e => {
+  if (e.target.classList && e.target.classList.contains('ov')) { pop(); return; }
+  const t = e.target.closest('[data-act]'); if (t && A[t.dataset.act]) A[t.dataset.act](t, e);
+});
+document.addEventListener('change', e => {
+  const t = e.target, ds = t.dataset;
+  if (ds.set) { S.settings[ds.set] = t.type === 'number' || ds.set === 'weekStart' || ds.set === 'batchDay' || ds.set === 'takeDay' || ds.set === 'vegDay1' || ds.set === 'vegDay2' ? (+t.value || 0) : t.value; regen(true); }
+  else if (ds.lvl) { const [k, f] = ds.lvl.split('.'); S.settings.levels[k][f] = +t.value || 0; regen(true); render(); }
+  else if (ds.lvlname) { S.settings.levels[ds.lvlname].label = t.value || S.settings.levels[ds.lvlname].label; save(); }
+  else if (ds.setlist) { S.settings[ds.setlist] = t.value.split(',').map(s => s.trim()).filter(Boolean); regen(true); }
+  else if (ds.train) { const dd = S.plan[ds.train] = S.plan[ds.train] || { meals: [], train: false }; dd.train = t.checked; save(); render(); }
+  else if (ds.rvp) { ui.rvP = Math.max(1, +t.value || 1); renderModal(true); }
+  else if (ds.range) { ui.range[ds.range] = t.value || ui.range[ds.range]; render(); }
+  else if (ds.tick) { ui.ticked[ds.tick] = t.checked; render(); }
+  else if (t.id === 'imp' && t.files[0]) {
+    t.files[0].text().then(txt => { try { const o = JSON.parse(txt); o.settings = mergeSettings(o.settings); S = { ...fresh(), ...o }; save(); render(); } catch (err) { alert('Fichier invalide.'); } });
+  }
+});
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+function regen() { save(); }
+render();
+</script>
+</body>
+</html>

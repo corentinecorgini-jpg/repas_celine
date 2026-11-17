@@ -1,0 +1,15 @@
+{
+  "name": "Repas de Céline",
+  "short_name": "Repas de Céline",
+  "description": "Planning de repas, batch cooking et courses",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FFF3E6",
+  "theme_color": "#FFF3E6",
+  "lang": "fr",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
